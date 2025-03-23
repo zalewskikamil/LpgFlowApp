@@ -16,7 +16,7 @@ class RoleAssigner {
         Role roleById = roleRetriever.getRoleById(roleId);
         if (user.getRoles().contains(roleById)) {
             throw new RoleAlreadyAssignedToUserException(
-                    "Role " + roleById.getName() + " is already assigned to user with id :" + user.getId());
+                    "Role " + roleById.getName() + " is already assigned to user with id: " + user.getId());
         }
         user.addRole(roleById);
         return userRepository.save(user);

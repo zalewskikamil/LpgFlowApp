@@ -38,7 +38,7 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/id/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<GetUserWithDetailsResponseDto> getUserById(@PathVariable Long id) {
         GetUserWithDetailsResponseDto response = userFacade.findUserWithDetails(id);
         return ResponseEntity.ok(response);

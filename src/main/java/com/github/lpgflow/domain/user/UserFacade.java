@@ -9,11 +9,13 @@ import com.github.lpgflow.domain.user.dto.response.GetAllUsersWithDetailsRespons
 import com.github.lpgflow.domain.user.dto.response.GetRoleResponseDto;
 import com.github.lpgflow.domain.user.dto.response.GetUserResponseDto;
 import com.github.lpgflow.domain.user.dto.response.GetUserWithDetailsResponseDto;
+import com.github.lpgflow.domain.user.dto.response.UserForSecurityDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,12 +27,13 @@ public class UserFacade {
     private final UserUpdater userUpdater;
     private final RoleRetriever roleRetriever;
     private final RoleAssigner roleAssigner;
+    private final UserMapper userMapper;
 
     public GetAllUsersWithDetailsResponseDto getAllUsersWithDetails(Pageable pageable) {
         List<User> users = userRetriever.findAll(pageable);
         return GetAllUsersWithDetailsResponseDto.builder()
                 .users(users.stream()
-                        .map(UserMapper::mapFromUserToUserWithDetailsDto)
+                        .map(userMapper::mapFromUserToUserWithDetailsDto)
                         .collect(Collectors.toList()))
                 .build();
     }
@@ -38,28 +41,33 @@ public class UserFacade {
     public GetUserWithDetailsResponseDto findUserWithDetails(final Long id) {
         User userById =  userRetriever.findById(id);
         return GetUserWithDetailsResponseDto.builder()
-                .user(UserMapper.mapFromUserToUserWithDetailsDto(userById))
+                .user(userMapper.mapFromUserToUserWithDetailsDto(userById))
                 .build();
     }
 
     public GetUserResponseDto findUserByEmail(String email) {
         User userByEmail = userRetriever.findByEmail(email);
-        return UserMapper.mapFromUserToGetUserResponseDto(userByEmail);
+        return userMapper.mapFromUserToGetUserResponseDto(userByEmail);
     }
 
-    public boolean existsByEmail(String email) {
-        return userRetriever.existsByEmail(email);
+    public Optional<UserForSecurityDto> findUserByEmailForSecurity(String email) {
+        try {
+            User userByEmail = userRetriever.findByEmail(email);
+            return Optional.of(userMapper.mapFromUserToUserForSecurityDto(userByEmail));
+        } catch (UserNotFoundException e) {
+            return Optional.empty();
+        }
     }
 
     public CreateUserResponseDto addUser(CreateUserRequestDto request) {
-        User user = UserMapper.mapFromCreateUserRequestDtoToUser(request);
+        User user = userMapper.mapFromCreateUserRequestDtoToUser(request);
         User savedUser = userAdder.addUser(user);
-        return UserMapper.mapFromUserToCreateUserRequestDto(savedUser);
+        return userMapper.mapFromUserToCreateUserRequestDto(savedUser);
     }
 
     public AssignRoleToUserResponseDto assignRoleToUser(Long userId, Long roleId) {
         User user = roleAssigner.assignRoleToUser(userId, roleId);
-        UserWithDetailsDto userWithDetailsDto = UserMapper.mapFromUserToUserWithDetailsDto(user);
+        UserWithDetailsDto userWithDetailsDto = userMapper.mapFromUserToUserWithDetailsDto(user);
         return new AssignRoleToUserResponseDto(userWithDetailsDto);
     }
 

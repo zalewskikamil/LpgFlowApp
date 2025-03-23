@@ -14,6 +14,7 @@ import com.github.lpgflow.domain.user.dto.response.GetUserWithDetailsResponseDto
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 
 import java.util.List;
 import java.util.Set;
@@ -25,7 +26,8 @@ class UserFacadeTest {
 
     UserFacade userFacade = UserFacadeConfiguration.createUserCrud(
             new InMemoryUserRepository(),
-            new InMemoryRoleRepository());
+            new InMemoryRoleRepository(),
+            NoOpPasswordEncoder.getInstance());
 
     @Test
     @DisplayName("Should return 2 users with details")
@@ -37,6 +39,7 @@ class UserFacadeTest {
         CreateUserRequestDto firstRequest = CreateUserRequestDto.builder()
                 .name(firstUsername)
                 .email(firstUserEmail)
+                .password("password")
                 .build();
         Long firstUserId = userFacade.addUser(firstRequest)
                 .user().id();
@@ -47,6 +50,7 @@ class UserFacadeTest {
         CreateUserRequestDto secondRequest = CreateUserRequestDto.builder()
                 .name(secondUserEmail)
                 .email(secondUsername)
+                .password("password")
                 .build();
         Long secondUserId = userFacade.addUser(secondRequest)
                 .user().id();
@@ -77,6 +81,7 @@ class UserFacadeTest {
         CreateUserRequestDto request = CreateUserRequestDto.builder()
                 .name(username)
                 .email(email)
+                .password("password")
                 .build();
         CreateUserResponseDto createUserResponseDto = userFacade.addUser(request);
         Long userId = createUserResponseDto.user().id();
@@ -120,6 +125,7 @@ class UserFacadeTest {
         CreateUserRequestDto request = CreateUserRequestDto.builder()
                 .name(username)
                 .email(email)
+                .password("password")
                 .build();
         userFacade.addUser(request);
         // when
@@ -154,6 +160,7 @@ class UserFacadeTest {
         String username = "User1";
         CreateUserRequestDto request = CreateUserRequestDto.builder()
                 .name(username)
+                .password("password")
                 .build();
         // when
         CreateUserResponseDto result = userFacade.addUser(request);
@@ -175,11 +182,13 @@ class UserFacadeTest {
         CreateUserRequestDto firstUserRequest = CreateUserRequestDto.builder()
                 .name("User1")
                 .email(email)
+                .password("password")
                 .build();
         userFacade.addUser(firstUserRequest);
         CreateUserRequestDto secondUserRequest = CreateUserRequestDto.builder()
                 .name("User2")
                 .email(email)
+                .password("password")
                 .build();
         // when
         Throwable throwable = catchThrowable(() -> userFacade.addUser(secondUserRequest));
@@ -197,6 +206,7 @@ class UserFacadeTest {
         CreateUserRequestDto firstUserRequest = CreateUserRequestDto.builder()
                 .name("User1")
                 .email(email)
+                .password("password")
                 .build();
         Long userId = userFacade.addUser(firstUserRequest).user().id();
         assertThat(userFacade.findUserWithDetails(userId).user().roles()).isEmpty();
@@ -239,6 +249,7 @@ class UserFacadeTest {
         CreateUserRequestDto userRequest = CreateUserRequestDto.builder()
                 .name("User1")
                 .email("test@test.com")
+                .password("password")
                 .build();
         Long userId = userFacade.addUser(userRequest).user().id();
         assertThat(userFacade.findUserWithDetails(userId).user().roles()).isEmpty();
@@ -260,6 +271,7 @@ class UserFacadeTest {
         CreateUserRequestDto firstUserRequest = CreateUserRequestDto.builder()
                 .name("User1")
                 .email(email)
+                .password("password")
                 .build();
         Long userId = userFacade.addUser(firstUserRequest).user().id();
         assertThat(userFacade.findUserWithDetails(userId).user().roles()).isEmpty();
@@ -280,6 +292,7 @@ class UserFacadeTest {
         // given
         CreateUserRequestDto dto = CreateUserRequestDto.builder()
                 .name("User1")
+                .password("password")
                 .build();
         Long userId = userFacade.addUser(dto)
                 .user().id();
@@ -297,6 +310,7 @@ class UserFacadeTest {
         // given
         CreateUserRequestDto dto = CreateUserRequestDto.builder()
                 .name("User1")
+                .password("password")
                 .build();
         Long userId = userFacade.addUser(dto)
                 .user().id();
@@ -315,6 +329,7 @@ class UserFacadeTest {
         // given
         CreateUserRequestDto dto = CreateUserRequestDto.builder()
                 .name("User1")
+                .password("password")
                 .build();
         Long userId = userFacade.addUser(dto)
                 .user().id();
@@ -333,6 +348,7 @@ class UserFacadeTest {
         // given
         CreateUserRequestDto dto = CreateUserRequestDto.builder()
                 .name("User1")
+                .password("password")
                 .build();
         Long userId = userFacade.addUser(dto)
                 .user().id();
@@ -350,6 +366,7 @@ class UserFacadeTest {
         // given
         CreateUserRequestDto dto = CreateUserRequestDto.builder()
                 .name("User1")
+                .password("password")
                 .build();
         Long userId = userFacade.addUser(dto)
                 .user().id();
@@ -367,6 +384,7 @@ class UserFacadeTest {
         // given
         CreateUserRequestDto dto = CreateUserRequestDto.builder()
                 .name("User1")
+                .password("password")
                 .build();
         Long userId = userFacade.addUser(dto)
                 .user().id();

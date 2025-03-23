@@ -19,6 +19,11 @@ interface UserRepository extends Repository<User, Long> {
             """)
     Optional<User> findById(Long id);
 
+    @Query("""
+            SELECT u FROM User u
+            LEFT JOIN FETCH u.roles
+            WHERE u.email = :email
+            """)
     Optional<User> findFirstByEmail(String email);
 
     User save(User user);
