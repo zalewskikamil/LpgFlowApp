@@ -1,6 +1,6 @@
 package com.github.lpgflow.domain.user;
 
-import com.github.lpgflow.domain.user.dto.UserWithDetailsDto;
+import com.github.lpgflow.domain.user.dto.response.UserWithDetailsDto;
 import com.github.lpgflow.domain.user.dto.request.CreateUserRequestDto;
 import com.github.lpgflow.domain.user.dto.response.AssignRoleToUserResponseDto;
 import com.github.lpgflow.domain.user.dto.response.CreateUserResponseDto;
@@ -38,10 +38,17 @@ public class UserFacade {
                 .build();
     }
 
-    public GetUserWithDetailsResponseDto findUserWithDetails(final Long id) {
+    public GetUserWithDetailsResponseDto findUserWithDetails(Long id) {
         User userById =  userRetriever.findById(id);
         return GetUserWithDetailsResponseDto.builder()
                 .user(userMapper.mapFromUserToUserWithDetailsDto(userById))
+                .build();
+    }
+
+    public GetUserWithDetailsResponseDto findUserWithDetailsByEmail(String email) {
+        User userByEmail = userRetriever.findByEmail(email);
+        return GetUserWithDetailsResponseDto.builder()
+                .user(userMapper.mapFromUserToUserWithDetailsDto(userByEmail))
                 .build();
     }
 
@@ -62,7 +69,7 @@ public class UserFacade {
     public CreateUserResponseDto addUser(CreateUserRequestDto request) {
         User user = userMapper.mapFromCreateUserRequestDtoToUser(request);
         User savedUser = userAdder.addUser(user);
-        return userMapper.mapFromUserToCreateUserRequestDto(savedUser);
+        return userMapper.mapFromUserToCreateUserResponseDto(savedUser);
     }
 
     public AssignRoleToUserResponseDto assignRoleToUser(Long userId, Long roleId) {

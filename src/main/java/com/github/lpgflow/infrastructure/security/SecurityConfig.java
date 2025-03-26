@@ -52,6 +52,16 @@ class SecurityConfig {
                 .requestMatchers(HttpMethod.PUT,"/users/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PATCH,"/users/**").hasRole("ADMIN")
                 .requestMatchers("/roles/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST,"/addresses/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE,"/addresses/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/warehouses/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/warehouses/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PATCH, "/warehouses/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/cylinders/**").hasRole("ADMIN")
+                .requestMatchers("/cylinders/**").hasAnyRole(
+                        "PLANNER", "REGIONAL_MANAGER", "WAREHOUSEMAN")
+                .requestMatchers("/bdfs").hasAnyRole(
+                        "PLANNER", "REGIONAL_MANAGER", "WAREHOUSEMAN")
                 .anyRequest().authenticated());
         return http.build();
     }

@@ -1,11 +1,8 @@
 package com.github.lpgflow.domain.user;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.security.Principal;
 
 @Service
 @RequiredArgsConstructor
@@ -55,9 +52,4 @@ class UserUpdater {
         userRepository.save(user);
         return true;
     }
-
-//    boolean changePassword(final String oldPassword, final String newPassword) {
-//        User user = userRetriever.findById(id);
-//
-//    }
 }

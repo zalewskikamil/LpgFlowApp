@@ -1,8 +1,8 @@
 package com.github.lpgflow.domain.user;
 
-import com.github.lpgflow.domain.user.dto.RoleDto;
-import com.github.lpgflow.domain.user.dto.UserDto;
-import com.github.lpgflow.domain.user.dto.UserWithDetailsDto;
+import com.github.lpgflow.domain.user.dto.response.RoleDto;
+import com.github.lpgflow.domain.user.dto.response.UserDto;
+import com.github.lpgflow.domain.user.dto.response.UserWithDetailsDto;
 import com.github.lpgflow.domain.user.dto.request.CreateUserRequestDto;
 import com.github.lpgflow.domain.user.dto.response.AssignRoleToUserResponseDto;
 import com.github.lpgflow.domain.user.dto.response.CreateUserResponseDto;
@@ -282,7 +282,7 @@ class UserFacadeTest {
         // then
         assertThat(throwable).isInstanceOf(RoleAlreadyAssignedToUserException.class);
         assertThat(throwable.getMessage()).isEqualTo(
-                "Role ADMIN is already assigned to user with id :" + userId);
+                "Role ADMIN is already assigned to user with id: " + userId);
         assertThat(userFacade.findUserWithDetails(userId).user().roles()).hasSize(1);
     }
 

@@ -9,7 +9,6 @@ import com.github.lpgflow.domain.user.dto.response.GetUserResponseDto;
 import com.github.lpgflow.domain.user.dto.response.GetUserWithDetailsResponseDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -24,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@Log4j2
 @RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {

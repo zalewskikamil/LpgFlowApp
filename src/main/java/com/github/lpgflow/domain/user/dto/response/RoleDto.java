@@ -1,4 +1,4 @@
-package com.github.lpgflow.domain.user.dto;
+package com.github.lpgflow.domain.user.dto.response;
 
 import lombok.Builder;
 

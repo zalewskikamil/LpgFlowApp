@@ -1,6 +1,6 @@
 package com.github.lpgflow.domain.user;
 
-import com.github.lpgflow.domain.user.dto.RoleDto;
+import com.github.lpgflow.domain.user.dto.response.RoleDto;
 import com.github.lpgflow.domain.user.dto.response.GetAllRolesResponseDto;
 import com.github.lpgflow.domain.user.dto.response.GetRoleResponseDto;
 

@@ -1,5 +1,17 @@
 package com.github.lpgflow.infrastructure.error;
 
+import com.github.lpgflow.domain.bdf.BdfDeleteException;
+import com.github.lpgflow.domain.order.OrderAccessException;
+import com.github.lpgflow.domain.order.OrderCancellationException;
+import com.github.lpgflow.domain.order.OrderParameterException;
+import com.github.lpgflow.domain.warehouse.AddressInUseException;
+import com.github.lpgflow.domain.warehouse.AddressNotFoundException;
+import com.github.lpgflow.domain.bdf.AssignCylindersToBdfParameterException;
+import com.github.lpgflow.domain.bdf.BdfCylinderNotFound;
+import com.github.lpgflow.domain.bdf.CylinderNotFoundException;
+import com.github.lpgflow.domain.bdf.CylinderParameterException;
+import com.github.lpgflow.domain.warehouse.WarehouseNotFoundException;
+import com.github.lpgflow.domain.warehouse.WarehouseParameterException;
 import com.github.lpgflow.domain.user.EmailAlreadyExistException;
 import com.github.lpgflow.domain.user.RoleAlreadyAssignedToUserException;
 import com.github.lpgflow.domain.user.RoleNotFoundException;
@@ -17,7 +29,7 @@ class ErrorHandler {
     @ExceptionHandler(EmailAlreadyExistException.class)
     public ResponseEntity<ErrorResponseDto> handleException(EmailAlreadyExistException exception) {
         log.warn("EmailAlreadyExistException while adding user");
-        HttpStatus status = HttpStatus.BAD_REQUEST;
+        HttpStatus status = HttpStatus.CONFLICT;
         return ResponseEntity.status(status).body(new ErrorResponseDto(exception.getMessage(), status));
     }
 
@@ -39,6 +51,88 @@ class ErrorHandler {
     public ResponseEntity<ErrorResponseDto> handleException(RoleNotFoundException exception) {
         log.warn("RoleAlreadyAssignedToUserException while accessing role");
         HttpStatus status = HttpStatus.NOT_FOUND;
+        return ResponseEntity.status(status).body(new ErrorResponseDto(exception.getMessage(), status));
+    }
+
+    @ExceptionHandler(AddressNotFoundException.class)
+    public ResponseEntity<ErrorResponseDto> handleException(AddressNotFoundException exception) {
+        log.warn("AddressNotFoundException while accessing address");
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        return ResponseEntity.status(status).body(new ErrorResponseDto(exception.getMessage(), status));
+    }
+
+    @ExceptionHandler(AddressInUseException.class)
+    public ResponseEntity<ErrorResponseDto> handleException(AddressInUseException exception) {
+        log.warn("AddressInUseException while deleting address");
+        HttpStatus status = HttpStatus.CONFLICT;
+        return ResponseEntity.status(status).body(new ErrorResponseDto(exception.getMessage(), status));
+    }
+
+    @ExceptionHandler(WarehouseNotFoundException.class)
+    public ResponseEntity<ErrorResponseDto> handleException(WarehouseNotFoundException exception) {
+        log.warn("WarehouseNotFoundException while accessing warehouse");
+        HttpStatus status = HttpStatus.CONFLICT;
+        return ResponseEntity.status(status).body(new ErrorResponseDto(exception.getMessage(), status));
+    }
+
+    @ExceptionHandler(WarehouseParameterException.class)
+    public ResponseEntity<ErrorResponseDto> handleException(WarehouseParameterException exception) {
+        log.warn("WarehouseParameterException while adding / updating warehouse");
+        HttpStatus status = HttpStatus.CONFLICT;
+        return ResponseEntity.status(status).body(new ErrorResponseDto(exception.getMessage(), status));
+    }
+
+    @ExceptionHandler(CylinderNotFoundException.class)
+    public ResponseEntity<ErrorResponseDto> handleException(CylinderNotFoundException exception) {
+        log.warn("CylinderNotFoundException while retrieving cylinder");
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        return ResponseEntity.status(status).body(new ErrorResponseDto(exception.getMessage(), status));
+    }
+
+    @ExceptionHandler(CylinderParameterException.class)
+    public ResponseEntity<ErrorResponseDto> handleException(CylinderParameterException exception) {
+        log.warn("CylinderParameterException while adding cylinder");
+        HttpStatus status = HttpStatus.CONFLICT;
+        return ResponseEntity.status(status).body(new ErrorResponseDto(exception.getMessage(), status));
+    }
+
+    @ExceptionHandler(AssignCylindersToBdfParameterException.class)
+    public ResponseEntity<ErrorResponseDto> handleException(AssignCylindersToBdfParameterException exception) {
+        log.warn("AssignCylindersToBdfParameterException while assigning cylinders to BDF");
+        HttpStatus status = HttpStatus.CONFLICT;
+        return ResponseEntity.status(status).body(new ErrorResponseDto(exception.getMessage(), status));
+    }
+
+    @ExceptionHandler(BdfCylinderNotFound.class)
+    public ResponseEntity<ErrorResponseDto> handleException(BdfCylinderNotFound exception) {
+        log.warn("BdfCylinderNotFoundException while retrieving cylinders assigned to BDF");
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        return ResponseEntity.status(status).body(new ErrorResponseDto(exception.getMessage(), status));
+    }
+    @ExceptionHandler(BdfDeleteException.class)
+    public ResponseEntity<ErrorResponseDto> handleException(BdfDeleteException exception) {
+        log.warn("BdfDeleteException while deleting BDF");
+        HttpStatus status = HttpStatus.CONFLICT;
+        return ResponseEntity.status(status).body(new ErrorResponseDto(exception.getMessage(), status));
+    }
+
+    @ExceptionHandler(OrderCancellationException.class)
+    public ResponseEntity<ErrorResponseDto> handleException(OrderCancellationException exception) {
+        log.warn("OrderCancellationException while cancelling order");
+        HttpStatus status = HttpStatus.CONFLICT;
+        return ResponseEntity.status(status).body(new ErrorResponseDto(exception.getMessage(), status));
+    }
+
+    @ExceptionHandler(OrderAccessException.class)
+    public ResponseEntity<ErrorResponseDto> handleException(OrderAccessException exception) {
+        log.warn("OrderAccessException while adding / retrieving / updating order");
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        return ResponseEntity.status(status).body(new ErrorResponseDto(exception.getMessage(), status));
+    }
+    @ExceptionHandler(OrderParameterException.class)
+    public ResponseEntity<ErrorResponseDto> handleException(OrderParameterException exception) {
+        log.warn("OrderParameterException while adding / updating order");
+        HttpStatus status = HttpStatus.CONFLICT;
         return ResponseEntity.status(status).body(new ErrorResponseDto(exception.getMessage(), status));
     }
 }

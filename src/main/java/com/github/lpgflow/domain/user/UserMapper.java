@@ -1,7 +1,7 @@
 package com.github.lpgflow.domain.user;
 
-import com.github.lpgflow.domain.user.dto.UserDto;
-import com.github.lpgflow.domain.user.dto.UserWithDetailsDto;
+import com.github.lpgflow.domain.user.dto.response.UserDto;
+import com.github.lpgflow.domain.user.dto.response.UserWithDetailsDto;
 import com.github.lpgflow.domain.user.dto.request.CreateUserRequestDto;
 import com.github.lpgflow.domain.user.dto.response.CreateUserResponseDto;
 import com.github.lpgflow.domain.user.dto.response.GetUserResponseDto;
@@ -18,7 +18,7 @@ class UserMapper {
 
     private final PasswordEncoder passwordEncoder;
 
-    CreateUserResponseDto mapFromUserToCreateUserRequestDto(User user) {
+    CreateUserResponseDto mapFromUserToCreateUserResponseDto(User user) {
         return CreateUserResponseDto.builder()
                 .user(mapFromUserToUserDto(user))
                 .build();
