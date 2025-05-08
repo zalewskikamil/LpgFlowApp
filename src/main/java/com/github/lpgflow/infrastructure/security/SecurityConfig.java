@@ -58,10 +58,10 @@ class SecurityConfig {
                 .requestMatchers(HttpMethod.PUT, "/warehouses/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PATCH, "/warehouses/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/cylinders/**").hasRole("ADMIN")
-                .requestMatchers("/cylinders/**").hasAnyRole(
-                        "PLANNER", "REGIONAL_MANAGER", "WAREHOUSEMAN")
                 .requestMatchers("/bdfs").hasAnyRole(
-                        "PLANNER", "REGIONAL_MANAGER", "WAREHOUSEMAN")
+                        "PLANNER", "REGIONAL_MANAGER", "WAREHOUSEMAN", "PRODUCTION_MANAGER")
+                .requestMatchers("/orders").hasAnyRole(
+                        "PLANNER", "REGIONAL_MANAGER", "WAREHOUSEMAN", "PRODUCTION_MANAGER")
                 .anyRequest().authenticated());
         return http.build();
     }

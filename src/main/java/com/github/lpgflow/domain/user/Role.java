@@ -1,5 +1,6 @@
 package com.github.lpgflow.domain.user;
 
+import com.github.lpgflow.domain.util.UserRole;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

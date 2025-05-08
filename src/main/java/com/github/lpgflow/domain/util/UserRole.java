@@ -1,4 +1,4 @@
-package com.github.lpgflow.domain.user;
+package com.github.lpgflow.domain.util;
 
 public enum UserRole {
     ADMIN,
