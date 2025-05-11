@@ -1,30 +1,28 @@
 package com.github.lpgflow.domain.user;
 
-import com.github.lpgflow.domain.user.dto.response.UserDto;
-import com.github.lpgflow.domain.user.dto.response.UserWithDetailsDto;
 import com.github.lpgflow.domain.user.dto.request.CreateUserRequestDto;
 import com.github.lpgflow.domain.user.dto.response.CreateUserResponseDto;
+import com.github.lpgflow.domain.user.dto.response.GetAllUsersWithDetailsResponseDto;
 import com.github.lpgflow.domain.user.dto.response.GetUserResponseDto;
+import com.github.lpgflow.domain.user.dto.response.GetUserWithDetailsResponseDto;
+import com.github.lpgflow.domain.user.dto.response.UserDto;
 import com.github.lpgflow.domain.user.dto.response.UserForSecurityDto;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import com.github.lpgflow.domain.user.dto.response.UserWithDetailsDto;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
 @Component
 class UserMapper {
 
-    private final PasswordEncoder passwordEncoder;
-
-    CreateUserResponseDto mapFromUserToCreateUserResponseDto(User user) {
+    static CreateUserResponseDto mapFromUserToCreateUserResponseDto(User user) {
         return CreateUserResponseDto.builder()
                 .user(mapFromUserToUserDto(user))
                 .build();
     }
 
-    private UserDto mapFromUserToUserDto(User user) {
+    static private UserDto mapFromUserToUserDto(User user) {
         return UserDto.builder()
                 .id(user.getId())
                 .name(user.getName())
@@ -34,13 +32,13 @@ class UserMapper {
                 .build();
     }
 
-    GetUserResponseDto mapFromUserToGetUserResponseDto(User user) {
+    static GetUserResponseDto mapFromUserToGetUserResponseDto(User user) {
         return GetUserResponseDto.builder()
                 .user(mapFromUserToUserDto(user))
                 .build();
     }
 
-    UserWithDetailsDto mapFromUserToUserWithDetailsDto(User user) {
+    static UserWithDetailsDto mapFromUserToUserWithDetailsDto(User user) {
         return UserWithDetailsDto.builder()
                 .id(user.getId())
                 .name(user.getName())
@@ -55,7 +53,7 @@ class UserMapper {
                 .build();
     }
 
-    UserForSecurityDto mapFromUserToUserForSecurityDto(User user) {
+    static UserForSecurityDto mapFromUserToUserForSecurityDto(User user) {
         return UserForSecurityDto.builder()
                 .email(user.getEmail())
                 .password(user.getPassword())
@@ -68,13 +66,26 @@ class UserMapper {
                 .build();
     }
 
-    User mapFromCreateUserRequestDtoToUser(CreateUserRequestDto dto) {
-        String encodedPassword = passwordEncoder.encode(dto.password());
+    static User mapFromCreateUserRequestDtoToUser(CreateUserRequestDto dto) {
         return new User(
                 dto.name(),
                 dto.lastName(),
                 dto.email(),
-                encodedPassword,
+                dto.password(),
                 dto.phoneNumber());
+    }
+
+    static GetAllUsersWithDetailsResponseDto mapFromListUsersToGetAllUsersWithDetailsResponseDto(List<User> users) {
+        return GetAllUsersWithDetailsResponseDto.builder()
+                .users(users.stream()
+                        .map(UserMapper::mapFromUserToUserWithDetailsDto)
+                        .collect(Collectors.toList()))
+                .build();
+    }
+
+    static GetUserWithDetailsResponseDto mapFromUserToGetUserWithDetailsResponseDto(User user) {
+        return GetUserWithDetailsResponseDto.builder()
+                .user(mapFromUserToUserWithDetailsDto(user))
+                .build();
     }
 }

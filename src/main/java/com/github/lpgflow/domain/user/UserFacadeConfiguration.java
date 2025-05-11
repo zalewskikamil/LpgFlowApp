@@ -8,11 +8,10 @@ class UserFacadeConfiguration {
                                             final RoleRepository roleRepository,
                                             final PasswordEncoder passwordEncoder) {
         UserRetriever userRetriever = new UserRetriever(userRepository);
-        UserAdder userAdder = new UserAdder(userRepository, userRetriever);
+        UserAdder userAdder = new UserAdder(userRepository, userRetriever, passwordEncoder);
         UserUpdater userUpdater = new UserUpdater(userRetriever, userRepository);
         RoleRetriever roleRetriever = new RoleRetriever(roleRepository);
         RoleAssigner roleAssigner = new RoleAssigner(userRetriever, roleRetriever, userRepository);
-        UserMapper userMapper = new UserMapper(passwordEncoder);
-        return new UserFacade(userRetriever, userAdder, userUpdater, roleRetriever, roleAssigner, userMapper);
+        return new UserFacade(userRetriever, userAdder, userUpdater, roleRetriever, roleAssigner);
     }
 }

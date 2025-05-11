@@ -1,6 +1,5 @@
 package com.github.lpgflow.domain.user;
 
-import com.github.lpgflow.domain.user.dto.response.UserWithDetailsDto;
 import com.github.lpgflow.domain.user.dto.request.CreateUserRequestDto;
 import com.github.lpgflow.domain.user.dto.response.AssignRoleToUserResponseDto;
 import com.github.lpgflow.domain.user.dto.response.CreateUserResponseDto;
@@ -10,13 +9,13 @@ import com.github.lpgflow.domain.user.dto.response.GetRoleResponseDto;
 import com.github.lpgflow.domain.user.dto.response.GetUserResponseDto;
 import com.github.lpgflow.domain.user.dto.response.GetUserWithDetailsResponseDto;
 import com.github.lpgflow.domain.user.dto.response.UserForSecurityDto;
+import com.github.lpgflow.domain.user.dto.response.UserWithDetailsDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,54 +26,45 @@ public class UserFacade {
     private final UserUpdater userUpdater;
     private final RoleRetriever roleRetriever;
     private final RoleAssigner roleAssigner;
-    private final UserMapper userMapper;
 
     public GetAllUsersWithDetailsResponseDto getAllUsersWithDetails(Pageable pageable) {
         List<User> users = userRetriever.findAll(pageable);
-        return GetAllUsersWithDetailsResponseDto.builder()
-                .users(users.stream()
-                        .map(userMapper::mapFromUserToUserWithDetailsDto)
-                        .collect(Collectors.toList()))
-                .build();
+        return UserMapper.mapFromListUsersToGetAllUsersWithDetailsResponseDto(users);
     }
 
     public GetUserWithDetailsResponseDto findUserWithDetails(Long id) {
         User userById =  userRetriever.findById(id);
-        return GetUserWithDetailsResponseDto.builder()
-                .user(userMapper.mapFromUserToUserWithDetailsDto(userById))
-                .build();
+        return UserMapper.mapFromUserToGetUserWithDetailsResponseDto(userById);
     }
 
     public GetUserWithDetailsResponseDto findUserWithDetailsByEmail(String email) {
         User userByEmail = userRetriever.findByEmail(email);
-        return GetUserWithDetailsResponseDto.builder()
-                .user(userMapper.mapFromUserToUserWithDetailsDto(userByEmail))
-                .build();
+        return UserMapper.mapFromUserToGetUserWithDetailsResponseDto(userByEmail);
     }
 
     public GetUserResponseDto findUserByEmail(String email) {
         User userByEmail = userRetriever.findByEmail(email);
-        return userMapper.mapFromUserToGetUserResponseDto(userByEmail);
+        return UserMapper.mapFromUserToGetUserResponseDto(userByEmail);
     }
 
     public Optional<UserForSecurityDto> findUserByEmailForSecurity(String email) {
         try {
             User userByEmail = userRetriever.findByEmail(email);
-            return Optional.of(userMapper.mapFromUserToUserForSecurityDto(userByEmail));
+            return Optional.of(UserMapper.mapFromUserToUserForSecurityDto(userByEmail));
         } catch (UserNotFoundException e) {
             return Optional.empty();
         }
     }
 
     public CreateUserResponseDto addUser(CreateUserRequestDto request) {
-        User user = userMapper.mapFromCreateUserRequestDtoToUser(request);
+        User user = UserMapper.mapFromCreateUserRequestDtoToUser(request);
         User savedUser = userAdder.addUser(user);
-        return userMapper.mapFromUserToCreateUserResponseDto(savedUser);
+        return UserMapper.mapFromUserToCreateUserResponseDto(savedUser);
     }
 
     public AssignRoleToUserResponseDto assignRoleToUser(Long userId, Long roleId) {
         User user = roleAssigner.assignRoleToUser(userId, roleId);
-        UserWithDetailsDto userWithDetailsDto = userMapper.mapFromUserToUserWithDetailsDto(user);
+        UserWithDetailsDto userWithDetailsDto = UserMapper.mapFromUserToUserWithDetailsDto(user);
         return new AssignRoleToUserResponseDto(userWithDetailsDto);
     }
 
