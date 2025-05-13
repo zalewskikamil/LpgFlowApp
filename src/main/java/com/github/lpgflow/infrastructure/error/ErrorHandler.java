@@ -4,6 +4,7 @@ import com.github.lpgflow.domain.bdf.BdfDeleteException;
 import com.github.lpgflow.domain.order.OrderAccessException;
 import com.github.lpgflow.domain.order.OrderCancellationException;
 import com.github.lpgflow.domain.order.OrderParameterException;
+import com.github.lpgflow.domain.user.UpdateUserException;
 import com.github.lpgflow.domain.warehouse.AddressInUseException;
 import com.github.lpgflow.domain.warehouse.AddressNotFoundException;
 import com.github.lpgflow.domain.bdf.AssignCylindersToBdfParameterException;
@@ -37,6 +38,13 @@ class ErrorHandler {
     public ResponseEntity<ErrorResponseDto> handleException(UserNotFoundException exception) {
         log.warn("UserNotFoundException while accessing user");
         HttpStatus status = HttpStatus.NOT_FOUND;
+        return ResponseEntity.status(status).body(new ErrorResponseDto(exception.getMessage(), status));
+    }
+
+    @ExceptionHandler(UpdateUserException.class)
+    public ResponseEntity<ErrorResponseDto> handleException(UpdateUserException exception) {
+        log.warn("UpdateUserException while updating user");
+        HttpStatus status = HttpStatus.BAD_REQUEST;
         return ResponseEntity.status(status).body(new ErrorResponseDto(exception.getMessage(), status));
     }
 

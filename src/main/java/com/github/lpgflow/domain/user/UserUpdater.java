@@ -1,55 +1,33 @@
 package com.github.lpgflow.domain.user;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
+@Log4j2
+@RequiredArgsConstructor
 class UserUpdater {
 
     private final UserRetriever userRetriever;
     private final UserRepository userRepository;
 
-    boolean blockUser(final Long id) {
-        User user = userRetriever.findById(id);
-        if (user.isBlocked()) {
-            return false;
+    User updatePartiallyById(Long id, User userFromRequest) {
+        Boolean enabled = userFromRequest.getEnabled();
+        Boolean blocked = userFromRequest.getBlocked();
+        if (enabled == null && blocked == null) {
+            throw new UpdateUserException("No user parameters to change");
         }
-        user.setBlocked(true);
-        userRepository.save(user);
-        return true;
-    }
-
-    boolean unblockUser(final Long id) {
-        User user = userRetriever.findById(id);
-        if (!user.isBlocked()) {
-            return false;
+        User userFromDatabase = userRetriever.findById(id);
+        if (enabled != null) {
+            userFromDatabase.setEnabled(enabled);
         }
-        user.setBlocked(false);
-        userRepository.save(user);
-        return true;
-    }
-
-    boolean enableUser(final Long id) {
-        User user = userRetriever.findById(id);
-        if (user.isEnabled()) {
-            return false;
+        if (blocked != null) {
+            userFromDatabase.setBlocked(blocked);
         }
-        user.setEnabled(true);
-        userRepository.save(user);
-        return true;
-    }
-
-
-    boolean disableUser(final Long id) {
-        User user = userRetriever.findById(id);
-        if (!user.isEnabled()) {
-            return false;
-        }
-        user.setEnabled(false);
-        userRepository.save(user);
-        return true;
+        log.info("Updating user with id: {}", id);
+        return userRepository.save(userFromDatabase);
     }
 }

@@ -1,10 +1,12 @@
 package com.github.lpgflow.domain.user;
 
 import com.github.lpgflow.domain.user.dto.request.CreateUserRequestDto;
+import com.github.lpgflow.domain.user.dto.request.UpdateUserPartiallyRequestDto;
 import com.github.lpgflow.domain.user.dto.response.CreateUserResponseDto;
 import com.github.lpgflow.domain.user.dto.response.GetAllUsersWithDetailsResponseDto;
 import com.github.lpgflow.domain.user.dto.response.GetUserResponseDto;
 import com.github.lpgflow.domain.user.dto.response.GetUserWithDetailsResponseDto;
+import com.github.lpgflow.domain.user.dto.response.UpdateUserPartiallyResponseDto;
 import com.github.lpgflow.domain.user.dto.response.UserDto;
 import com.github.lpgflow.domain.user.dto.response.UserForSecurityDto;
 import com.github.lpgflow.domain.user.dto.response.UserWithDetailsDto;
@@ -45,8 +47,8 @@ class UserMapper {
                 .lastName(user.getLastName())
                 .email(user.getEmail())
                 .phoneNumber(user.getPhoneNumber())
-                .enabled(user.isEnabled())
-                .blocked(user.isBlocked())
+                .enabled(user.getEnabled())
+                .blocked(user.getBlocked())
                 .roles(user.getRoles().stream()
                         .map(RoleMapper::mapFromRoleToRoleDto)
                         .collect(Collectors.toSet()))
@@ -61,8 +63,8 @@ class UserMapper {
                         .stream()
                         .map(role -> role.getName().name())
                         .collect(Collectors.toSet()))
-                .enabled(user.isEnabled())
-                .blocked(user.isBlocked())
+                .enabled(user.getEnabled())
+                .blocked(user.getBlocked())
                 .build();
     }
 
@@ -85,6 +87,19 @@ class UserMapper {
 
     static GetUserWithDetailsResponseDto mapFromUserToGetUserWithDetailsResponseDto(User user) {
         return GetUserWithDetailsResponseDto.builder()
+                .user(mapFromUserToUserWithDetailsDto(user))
+                .build();
+    }
+
+    static User mapFromUpdateUserPartiallyRequestDtoToUser(UpdateUserPartiallyRequestDto request) {
+        return User.builder()
+                .enabled(request.enabled())
+                .blocked(request.blocked())
+                .build();
+    }
+
+    static UpdateUserPartiallyResponseDto mapFromUserToUpdateUserPartiallyResponseDto(User user) {
+        return UpdateUserPartiallyResponseDto.builder()
                 .user(mapFromUserToUserWithDetailsDto(user))
                 .build();
     }

@@ -11,6 +11,8 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,7 +24,9 @@ import java.util.HashSet;
 @Table(name = "users")
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 class User extends BaseEntity {
 
     @Id
@@ -47,9 +51,9 @@ class User extends BaseEntity {
 
     private String phoneNumber;
 
-    private boolean enabled = true;
+    private Boolean enabled = true;
 
-    private boolean blocked = false;
+    private Boolean blocked = false;
 
     @ManyToMany
     @JoinTable(
@@ -59,8 +63,7 @@ class User extends BaseEntity {
     )
     private Collection<Role> roles = new HashSet<>();
 
-    User(final String name, final String lastName, final String email, final String password,
-         final String phoneNumber) {
+    User(String name, String lastName, String email, String password, String phoneNumber) {
         this.name = name;
         this.lastName = lastName;
         this.email = email;

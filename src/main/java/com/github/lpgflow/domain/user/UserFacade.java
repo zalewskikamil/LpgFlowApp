@@ -1,6 +1,7 @@
 package com.github.lpgflow.domain.user;
 
 import com.github.lpgflow.domain.user.dto.request.CreateUserRequestDto;
+import com.github.lpgflow.domain.user.dto.request.UpdateUserPartiallyRequestDto;
 import com.github.lpgflow.domain.user.dto.response.AssignRoleToUserResponseDto;
 import com.github.lpgflow.domain.user.dto.response.CreateUserResponseDto;
 import com.github.lpgflow.domain.user.dto.response.GetAllRolesResponseDto;
@@ -8,6 +9,7 @@ import com.github.lpgflow.domain.user.dto.response.GetAllUsersWithDetailsRespons
 import com.github.lpgflow.domain.user.dto.response.GetRoleResponseDto;
 import com.github.lpgflow.domain.user.dto.response.GetUserResponseDto;
 import com.github.lpgflow.domain.user.dto.response.GetUserWithDetailsResponseDto;
+import com.github.lpgflow.domain.user.dto.response.UpdateUserPartiallyResponseDto;
 import com.github.lpgflow.domain.user.dto.response.UserForSecurityDto;
 import com.github.lpgflow.domain.user.dto.response.UserWithDetailsDto;
 import lombok.RequiredArgsConstructor;
@@ -68,20 +70,11 @@ public class UserFacade {
         return new AssignRoleToUserResponseDto(userWithDetailsDto);
     }
 
-    public boolean blockUser(final Long id) {
-        return userUpdater.blockUser(id);
-    }
+    public UpdateUserPartiallyResponseDto updateUserPartiallyById(Long id, UpdateUserPartiallyRequestDto request) {
+        User userFromRequest = UserMapper.mapFromUpdateUserPartiallyRequestDtoToUser(request);
+        User updatedUser = userUpdater.updatePartiallyById(id, userFromRequest);
+        return UserMapper.mapFromUserToUpdateUserPartiallyResponseDto(updatedUser);
 
-    public boolean unblockUser(final Long id) {
-        return userUpdater.unblockUser(id);
-    }
-
-    public boolean disableUser(final Long id) {
-        return userUpdater.disableUser(id);
-    }
-
-    public boolean enableUser(final Long id) {
-        return userUpdater.enableUser(id);
     }
 
     public GetAllRolesResponseDto getAllRoles() {

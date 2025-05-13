@@ -1,6 +1,8 @@
 package com.github.lpgflow.domain.user;
 
+import com.github.lpgflow.domain.user.dto.request.UpdateUserPartiallyRequestDto;
 import com.github.lpgflow.domain.user.dto.response.RoleDto;
+import com.github.lpgflow.domain.user.dto.response.UpdateUserPartiallyResponseDto;
 import com.github.lpgflow.domain.user.dto.response.UserDto;
 import com.github.lpgflow.domain.user.dto.response.UserWithDetailsDto;
 import com.github.lpgflow.domain.user.dto.request.CreateUserRequestDto;
@@ -287,82 +289,8 @@ class UserFacadeTest {
     }
 
     @Test
-    @DisplayName("Should block user When user was not blocked")
-    public void should_block_user() {
-        // given
-        CreateUserRequestDto dto = CreateUserRequestDto.builder()
-                .name("User1")
-                .password("password")
-                .build();
-        Long userId = userFacade.addUser(dto)
-                .user().id();
-        assertThat(userFacade.findUserWithDetails(userId).user().blocked()).isFalse();
-        // when
-        boolean result = userFacade.blockUser(userId);
-        // then
-        assertThat(result).isTrue();
-        assertThat(userFacade.findUserWithDetails(userId).user().blocked()).isTrue();
-    }
-
-    @Test
-    @DisplayName("Should not change blocked status When user was already blocked")
-    public void should_not_block_user_when_user_was_already_blocked() {
-        // given
-        CreateUserRequestDto dto = CreateUserRequestDto.builder()
-                .name("User1")
-                .password("password")
-                .build();
-        Long userId = userFacade.addUser(dto)
-                .user().id();
-        userFacade.blockUser(userId);
-        assertThat(userFacade.findUserWithDetails(userId).user().blocked()).isTrue();
-        // when
-        boolean result = userFacade.blockUser(userId);
-        // then
-        assertThat(result).isFalse();
-        assertThat(userFacade.findUserWithDetails(userId).user().blocked()).isTrue();
-    }
-
-    @Test
-    @DisplayName("Should unblocked user When user was blocked")
-    public void should_unblock_user_when_user_was_blocked() {
-        // given
-        CreateUserRequestDto dto = CreateUserRequestDto.builder()
-                .name("User1")
-                .password("password")
-                .build();
-        Long userId = userFacade.addUser(dto)
-                .user().id();
-        userFacade.blockUser(userId);
-        assertThat(userFacade.findUserWithDetails(userId).user().blocked()).isTrue();
-        // when
-        boolean result = userFacade.unblockUser(userId);
-        // then
-        assertThat(result).isTrue();
-        assertThat(userFacade.findUserWithDetails(userId).user().blocked()).isFalse();
-    }
-
-    @Test
-    @DisplayName("Should not change blocked status When user was already unblocked")
-    public void should_not_change_blocked_status_when_user_was_already_unblocked() {
-        // given
-        CreateUserRequestDto dto = CreateUserRequestDto.builder()
-                .name("User1")
-                .password("password")
-                .build();
-        Long userId = userFacade.addUser(dto)
-                .user().id();
-        assertThat(userFacade.findUserWithDetails(userId).user().blocked()).isFalse();
-        // when
-        boolean result = userFacade.unblockUser(userId);
-        // then
-        assertThat(result).isFalse();
-        assertThat(userFacade.findUserWithDetails(userId).user().blocked()).isFalse();
-    }
-
-    @Test
-    @DisplayName("Should disable user")
-    public void should_disable_user() {
+    @DisplayName("Should update user partially")
+    public void should_update_user_partially() {
         // given
         CreateUserRequestDto dto = CreateUserRequestDto.builder()
                 .name("User1")
@@ -371,16 +299,32 @@ class UserFacadeTest {
         Long userId = userFacade.addUser(dto)
                 .user().id();
         assertThat(userFacade.findUserWithDetails(userId).user().enabled()).isTrue();
+        assertThat(userFacade.findUserWithDetails(userId).user().blocked()).isFalse();
+        UpdateUserPartiallyRequestDto request = UpdateUserPartiallyRequestDto.builder()
+                .enabled(false)
+                .blocked(true)
+                .build();
         // when
-        boolean result = userFacade.disableUser(userId);
+        UpdateUserPartiallyResponseDto result = userFacade.updateUserPartiallyById(userId, request);
         // then
-        assertThat(result).isTrue();
+        UserWithDetailsDto user = UserWithDetailsDto.builder()
+                .id(userId)
+                .name("User1")
+                .enabled(false)
+                .blocked(true)
+                .roles(Set.of())
+                .build();
+        UpdateUserPartiallyResponseDto response = UpdateUserPartiallyResponseDto.builder()
+                .user(user)
+                .build();
+        assertThat(result).isEqualTo(response);
         assertThat(userFacade.findUserWithDetails(userId).user().enabled()).isFalse();
+        assertThat(userFacade.findUserWithDetails(userId).user().blocked()).isTrue();
     }
 
     @Test
-    @DisplayName("Should enable user when user was disabled")
-    public void should_enable_user_when_user_disabled() {
+    @DisplayName("Should throw UpdateUserException When no user parameters was sending")
+    public void should_throw_user_update_exception_when_no_user_parameters_was_sending() {
         // given
         CreateUserRequestDto dto = CreateUserRequestDto.builder()
                 .name("User1")
@@ -388,13 +332,13 @@ class UserFacadeTest {
                 .build();
         Long userId = userFacade.addUser(dto)
                 .user().id();
-        userFacade.disableUser(userId);
-        assertThat(userFacade.findUserWithDetails(userId).user().enabled()).isFalse();
+        UpdateUserPartiallyRequestDto request = UpdateUserPartiallyRequestDto.builder().build();
         // when
-        boolean result = userFacade.enableUser(userId);
+        Throwable throwable = catchThrowable(() -> userFacade.updateUserPartiallyById(userId, request));
         // then
-        assertThat(result).isTrue();
-        assertThat(userFacade.findUserWithDetails(userId).user().enabled()).isTrue();
+        assertThat(throwable).isInstanceOf(UpdateUserException.class);
+        assertThat(throwable.getMessage()).isEqualTo(
+                "No user parameters to change");
     }
 
     @Test
