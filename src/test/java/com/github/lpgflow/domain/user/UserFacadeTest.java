@@ -1,5 +1,6 @@
 package com.github.lpgflow.domain.user;
 
+import com.github.lpgflow.domain.user.dto.request.UpdatePasswordRequestDto;
 import com.github.lpgflow.domain.user.dto.request.UpdateUserPartiallyRequestDto;
 import com.github.lpgflow.domain.user.dto.response.RoleDto;
 import com.github.lpgflow.domain.user.dto.response.UpdateUserPartiallyResponseDto;
@@ -13,8 +14,10 @@ import com.github.lpgflow.domain.user.dto.response.GetAllUsersWithDetailsRespons
 import com.github.lpgflow.domain.user.dto.response.GetRoleResponseDto;
 import com.github.lpgflow.domain.user.dto.response.GetUserResponseDto;
 import com.github.lpgflow.domain.user.dto.response.GetUserWithDetailsResponseDto;
+import com.github.lpgflow.infrastructure.security.AuthenticatedUserProvider;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 
@@ -23,13 +26,17 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.mockito.Mockito.when;
 
 class UserFacadeTest {
+
+    AuthenticatedUserProvider authenticatedUserProvider = Mockito.mock(AuthenticatedUserProvider.class);
 
     UserFacade userFacade = UserFacadeConfiguration.createUserCrud(
             new InMemoryUserRepository(),
             new InMemoryRoleRepository(),
-            NoOpPasswordEncoder.getInstance());
+            NoOpPasswordEncoder.getInstance(),
+            authenticatedUserProvider);
 
     @Test
     @DisplayName("Should return 2 users with details")
@@ -339,6 +346,81 @@ class UserFacadeTest {
         assertThat(throwable).isInstanceOf(UpdateUserException.class);
         assertThat(throwable.getMessage()).isEqualTo(
                 "No user parameters to change");
+    }
+
+    @Test
+    @DisplayName("Should throw UpdatePasswordException When new password was not matched")
+    public void should_throw_update_password_exception_when_new_password_was_not_matched() {
+        // given
+        String password = "password";
+        String email = "test@test.pl";
+        CreateUserRequestDto dto = CreateUserRequestDto.builder()
+                .name("User1")
+                .email(email)
+                .password(password)
+                .build();
+        UpdatePasswordRequestDto request = UpdatePasswordRequestDto.builder()
+                .actualPassword(password)
+                .newPassword("newPassword")
+                .confirmNewPassword("anotherPassword")
+                .build();
+        when(authenticatedUserProvider.getCurrentUserName()).thenReturn(email);
+        // when
+        Throwable throwable = catchThrowable(() -> userFacade.updateUserPassword(request));
+        // then
+        assertThat(throwable).isInstanceOf(UpdatePasswordException.class);
+        assertThat(throwable.getMessage()).isEqualTo("New password does not match");
+    }
+
+    @Test
+    @DisplayName("Should throw UpdatePasswordException When actual password was the same as the new password")
+    public void should_throw_update_password_exception_when_actual_password_was_the_same_as_the_new_password() {
+        // given
+        String password = "password";
+        String email = "test@test.pl";
+        CreateUserRequestDto dto = CreateUserRequestDto.builder()
+                .name("User1")
+                .email(email)
+                .password(password)
+                .build();
+        UpdatePasswordRequestDto request = UpdatePasswordRequestDto.builder()
+                .actualPassword(password)
+                .newPassword(password)
+                .confirmNewPassword(password)
+                .build();
+        when(authenticatedUserProvider.getCurrentUserName()).thenReturn(email);
+        // when
+        Throwable throwable = catchThrowable(() -> userFacade.updateUserPassword(request));
+        // then
+        assertThat(throwable).isInstanceOf(UpdatePasswordException.class);
+        assertThat(throwable.getMessage()).isEqualTo("The new password must be different from the current one");
+    }
+
+    @Test
+    @DisplayName("Should throw UpdatePasswordException When actual password was not matched")
+    public void should_throw_update_password_exception_when_actual_password_was_not_matched() {
+        // given
+        String password = "password";
+        String email = "test@test.pl";
+        CreateUserRequestDto dto = CreateUserRequestDto.builder()
+                .name("User1")
+                .email(email)
+                .password(password)
+                .build();
+        Long userId = userFacade.addUser(dto)
+                .user().id();
+        String newPassword = "newPassword";
+        UpdatePasswordRequestDto request = UpdatePasswordRequestDto.builder()
+                .actualPassword("wrongActualPassword")
+                .newPassword(newPassword)
+                .confirmNewPassword(newPassword)
+                .build();
+        when(authenticatedUserProvider.getCurrentUserName()).thenReturn(email);
+        // when
+        Throwable throwable = catchThrowable(() -> userFacade.updateUserPassword(request));
+        // then
+        assertThat(throwable).isInstanceOf(UpdatePasswordException.class);
+        assertThat(throwable.getMessage()).isEqualTo("Wrong actual password");
     }
 
     @Test

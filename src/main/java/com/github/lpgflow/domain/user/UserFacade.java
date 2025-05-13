@@ -1,6 +1,7 @@
 package com.github.lpgflow.domain.user;
 
 import com.github.lpgflow.domain.user.dto.request.CreateUserRequestDto;
+import com.github.lpgflow.domain.user.dto.request.UpdatePasswordRequestDto;
 import com.github.lpgflow.domain.user.dto.request.UpdateUserPartiallyRequestDto;
 import com.github.lpgflow.domain.user.dto.response.AssignRoleToUserResponseDto;
 import com.github.lpgflow.domain.user.dto.response.CreateUserResponseDto;
@@ -74,7 +75,10 @@ public class UserFacade {
         User userFromRequest = UserMapper.mapFromUpdateUserPartiallyRequestDtoToUser(request);
         User updatedUser = userUpdater.updatePartiallyById(id, userFromRequest);
         return UserMapper.mapFromUserToUpdateUserPartiallyResponseDto(updatedUser);
+    }
 
+    public void updateUserPassword(UpdatePasswordRequestDto request) {
+        userUpdater.updatePassword(request);
     }
 
     public GetAllRolesResponseDto getAllRoles() {

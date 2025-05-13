@@ -2,6 +2,7 @@ package com.github.lpgflow.infrastructure.user.user;
 
 import com.github.lpgflow.domain.user.UserFacade;
 import com.github.lpgflow.domain.user.dto.request.CreateUserRequestDto;
+import com.github.lpgflow.domain.user.dto.request.UpdatePasswordRequestDto;
 import com.github.lpgflow.domain.user.dto.request.UpdateUserPartiallyRequestDto;
 import com.github.lpgflow.domain.user.dto.response.AssignRoleToUserResponseDto;
 import com.github.lpgflow.domain.user.dto.response.CreateUserResponseDto;
@@ -70,37 +71,11 @@ public class UserController {
         UpdateUserPartiallyResponseDto response = userFacade.updateUserPartiallyById(id, request);
         return ResponseEntity.ok(response);
     }
-//
-//    @PatchMapping("/{id}/block")
-//    public ResponseEntity<String> blockUser(@PathVariable Long id) {
-//        boolean success = userFacade.blockUser(id);
-//        return success ?
-//                ResponseEntity.ok("User successfully blocked") :
-//                ResponseEntity.status(HttpStatus.CONFLICT).body("User is already blocked");
-//    }
-//
-//    @PatchMapping("/{id}/unblock")
-//    public ResponseEntity<String> unblockUser(@PathVariable Long id) {
-//        boolean success = userFacade.unblockUser(id);
-//        return success ?
-//                ResponseEntity.ok("User successfully unblocked") :
-//                ResponseEntity.status(HttpStatus.CONFLICT).body("User is already unblocked");
-//    }
-//
-//    @PatchMapping("/{id}/enable")
-//    public ResponseEntity<String> enableUser(@PathVariable Long id) {
-//        boolean success = userFacade.enableUser(id);
-//        return success ?
-//                ResponseEntity.ok("User successfully enabled") :
-//                ResponseEntity.status(HttpStatus.CONFLICT).body("User is already enabled");
-//    }
-//
-//    @PatchMapping("/{id}/disable")
-//    public ResponseEntity<String> disableUser(@PathVariable Long id) {
-//        boolean success = userFacade.disableUser(id);
-//        return success ?
-//                ResponseEntity.ok("User successfully disabled") :
-//                ResponseEntity.status(HttpStatus.CONFLICT).body("User is already disabled");
-//    }
-//
+
+    @PatchMapping("/password")
+    public ResponseEntity<Void> updateUserPartially(
+            @Valid UpdatePasswordRequestDto request) {
+        userFacade.updateUserPassword(request);
+        return ResponseEntity.ok().build();
+    }
 }
