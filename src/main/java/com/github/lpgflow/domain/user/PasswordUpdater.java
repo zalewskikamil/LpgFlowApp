@@ -9,6 +9,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+
 @Service
 @Transactional
 @Log4j2
@@ -51,6 +53,9 @@ class PasswordUpdater {
         Otp otpByUserEmail = otpRetriever.findByUserEmail(userEmail);
         if (otpByUserEmail.isUsed()) {
             throw new ResetPasswordException("OTP is already used");
+        }
+        if (Instant.now().isAfter(otpByUserEmail.getExpiresAt())) {
+            throw new ResetPasswordException("OTP is already expired");
         }
         String otpAsStringFromDatabase = otpByUserEmail.getOtp();
         if (!otpAsStringFromDatabase.equals(request.otp()) ) {
