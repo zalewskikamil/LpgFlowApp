@@ -1,9 +1,9 @@
 package com.github.lpgflow.domain.bdf;
 
-import com.github.lpgflow.domain.util.BaseEntity;
-import com.github.lpgflow.domain.util.CylinderCapacity;
-import com.github.lpgflow.domain.util.CylinderUsageType;
-import com.github.lpgflow.domain.util.GasType;
+import com.github.lpgflow.domain.util.entity.BaseEntity;
+import com.github.lpgflow.domain.util.enums.CylinderCapacity;
+import com.github.lpgflow.domain.util.enums.CylinderUsageType;
+import com.github.lpgflow.domain.util.enums.GasType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

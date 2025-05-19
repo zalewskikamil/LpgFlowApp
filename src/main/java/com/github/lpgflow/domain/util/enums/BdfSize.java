@@ -1,4 +1,4 @@
-package com.github.lpgflow.domain.util;
+package com.github.lpgflow.domain.util.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.github.lpgflow.domain.warehouse.WarehouseParameterException;

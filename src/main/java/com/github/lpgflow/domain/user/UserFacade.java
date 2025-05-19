@@ -1,6 +1,7 @@
 package com.github.lpgflow.domain.user;
 
 import com.github.lpgflow.domain.user.dto.request.CreateUserRequestDto;
+import com.github.lpgflow.domain.user.dto.request.ResetForgottenPasswordRequestDto;
 import com.github.lpgflow.domain.user.dto.request.UpdatePasswordRequestDto;
 import com.github.lpgflow.domain.user.dto.request.UpdateUserPartiallyRequestDto;
 import com.github.lpgflow.domain.user.dto.response.AssignRoleToUserResponseDto;
@@ -29,6 +30,8 @@ public class UserFacade {
     private final UserUpdater userUpdater;
     private final RoleRetriever roleRetriever;
     private final RoleAssigner roleAssigner;
+    private final PasswordUpdater passwordUpdater;
+    private final PasswordResetOtpSender passwordResetOtpSender;
 
     public GetAllUsersWithDetailsResponseDto getAllUsersWithDetails(Pageable pageable) {
         List<User> users = userRetriever.findAll(pageable);
@@ -78,7 +81,15 @@ public class UserFacade {
     }
 
     public void updateUserPassword(UpdatePasswordRequestDto request) {
-        userUpdater.updatePassword(request);
+        passwordUpdater.changePassword(request);
+    }
+
+    public void forgotPassword(String userEmail) {
+        passwordResetOtpSender.generateAndSendOtp(userEmail);
+    }
+
+    public void resetForgottenPassword(ResetForgottenPasswordRequestDto request) {
+        passwordUpdater.resetForgottenPassword(request);
     }
 
     public GetAllRolesResponseDto getAllRoles() {
@@ -86,7 +97,7 @@ public class UserFacade {
         return RoleMapper.mapFromListOfRolesToGetAllRolesResponseDto(roles);
     }
 
-    public GetRoleResponseDto getRoleById(final Long id) {
+    public GetRoleResponseDto getRoleById(Long id) {
         Role roleById = roleRetriever.getRoleById(id);
         return RoleMapper.mapFromRoleToGetRoleResponseDto(roleById);
     }

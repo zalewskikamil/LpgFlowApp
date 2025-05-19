@@ -5,7 +5,7 @@ import com.github.lpgflow.domain.bdf.dto.response.BdfDto;
 import com.github.lpgflow.domain.bdf.dto.response.CreateBdfResponseDto;
 import com.github.lpgflow.domain.bdf.dto.response.GetBdfByIdDto;
 import com.github.lpgflow.domain.bdf.dto.response.GetCurrentUserUnorderedBdfs;
-import com.github.lpgflow.domain.util.BdfSize;
+import com.github.lpgflow.domain.util.enums.BdfSize;
 
 import java.util.Set;
 import java.util.stream.Collectors;

@@ -1,4 +1,4 @@
-package com.github.lpgflow.domain.util;
+package com.github.lpgflow.domain.util.entity;
 
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Version;

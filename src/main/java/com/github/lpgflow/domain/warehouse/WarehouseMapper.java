@@ -1,6 +1,6 @@
 package com.github.lpgflow.domain.warehouse;
 
-import com.github.lpgflow.domain.util.BdfSize;
+import com.github.lpgflow.domain.util.enums.BdfSize;
 import com.github.lpgflow.domain.warehouse.dto.request.CreateWarehouseRequestDto;
 import com.github.lpgflow.domain.warehouse.dto.request.UpdateWarehousePartiallyRequestDto;
 import com.github.lpgflow.domain.warehouse.dto.response.AssignAddressToWarehouseResponseDto;

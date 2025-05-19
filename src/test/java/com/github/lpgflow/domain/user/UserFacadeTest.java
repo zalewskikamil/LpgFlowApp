@@ -14,6 +14,7 @@ import com.github.lpgflow.domain.user.dto.response.GetAllUsersWithDetailsRespons
 import com.github.lpgflow.domain.user.dto.response.GetRoleResponseDto;
 import com.github.lpgflow.domain.user.dto.response.GetUserResponseDto;
 import com.github.lpgflow.domain.user.dto.response.GetUserWithDetailsResponseDto;
+import com.github.lpgflow.domain.util.messagesender.EmailSender;
 import com.github.lpgflow.infrastructure.security.AuthenticatedUserProvider;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,7 @@ import org.mockito.Mockito;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 
+import java.time.Clock;
 import java.util.List;
 import java.util.Set;
 
@@ -31,12 +33,17 @@ import static org.mockito.Mockito.when;
 class UserFacadeTest {
 
     AuthenticatedUserProvider authenticatedUserProvider = Mockito.mock(AuthenticatedUserProvider.class);
+    EmailSender emailSender = Mockito.mock(EmailSender.class);
+    Clock clock = Mockito.mock(Clock.class);
 
     UserFacade userFacade = UserFacadeConfiguration.createUserCrud(
             new InMemoryUserRepository(),
             new InMemoryRoleRepository(),
             NoOpPasswordEncoder.getInstance(),
-            authenticatedUserProvider);
+            authenticatedUserProvider,
+            new InMemoryOtpRepository(),
+            emailSender,
+            clock);
 
     @Test
     @DisplayName("Should return 2 users with details")
@@ -349,8 +356,8 @@ class UserFacadeTest {
     }
 
     @Test
-    @DisplayName("Should throw UpdatePasswordException When new password was not matched")
-    public void should_throw_update_password_exception_when_new_password_was_not_matched() {
+    @DisplayName("Should throw ChangePasswordException When new password was not matched")
+    public void should_throw_change_password_exception_when_new_password_was_not_matched() {
         // given
         String password = "password";
         String email = "test@test.pl";
@@ -368,8 +375,8 @@ class UserFacadeTest {
         // when
         Throwable throwable = catchThrowable(() -> userFacade.updateUserPassword(request));
         // then
-        assertThat(throwable).isInstanceOf(UpdatePasswordException.class);
-        assertThat(throwable.getMessage()).isEqualTo("New password does not match");
+        assertThat(throwable).isInstanceOf(ChangePasswordException.class);
+        assertThat(throwable.getMessage()).isEqualTo("New password and confirm new password are not the same");
     }
 
     @Test
@@ -392,7 +399,7 @@ class UserFacadeTest {
         // when
         Throwable throwable = catchThrowable(() -> userFacade.updateUserPassword(request));
         // then
-        assertThat(throwable).isInstanceOf(UpdatePasswordException.class);
+        assertThat(throwable).isInstanceOf(ChangePasswordException.class);
         assertThat(throwable.getMessage()).isEqualTo("The new password must be different from the current one");
     }
 
@@ -419,7 +426,7 @@ class UserFacadeTest {
         // when
         Throwable throwable = catchThrowable(() -> userFacade.updateUserPassword(request));
         // then
-        assertThat(throwable).isInstanceOf(UpdatePasswordException.class);
+        assertThat(throwable).isInstanceOf(ChangePasswordException.class);
         assertThat(throwable.getMessage()).isEqualTo("Wrong actual password");
     }
 

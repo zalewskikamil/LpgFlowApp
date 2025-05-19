@@ -4,7 +4,10 @@ import com.github.lpgflow.domain.bdf.BdfDeleteException;
 import com.github.lpgflow.domain.order.OrderAccessException;
 import com.github.lpgflow.domain.order.OrderCancellationException;
 import com.github.lpgflow.domain.order.OrderParameterException;
-import com.github.lpgflow.domain.user.UpdatePasswordException;
+import com.github.lpgflow.domain.user.EmailSendingException;
+import com.github.lpgflow.domain.user.OtpNotFoundException;
+import com.github.lpgflow.domain.user.ChangePasswordException;
+import com.github.lpgflow.domain.user.ResetPasswordException;
 import com.github.lpgflow.domain.user.UpdateUserException;
 import com.github.lpgflow.domain.warehouse.AddressInUseException;
 import com.github.lpgflow.domain.warehouse.AddressNotFoundException;
@@ -49,10 +52,31 @@ class ErrorHandler {
         return ResponseEntity.status(status).body(new ErrorResponseDto(exception.getMessage(), status));
     }
 
-    @ExceptionHandler(UpdatePasswordException.class)
-    public ResponseEntity<ErrorResponseDto> handleException(UpdatePasswordException exception) {
-        log.warn("UpdatePasswordException while updating user password");
+    @ExceptionHandler(ChangePasswordException.class)
+    public ResponseEntity<ErrorResponseDto> handleException(ChangePasswordException exception) {
+        log.warn("ChangePasswordException while updating user password");
         HttpStatus status = HttpStatus.BAD_REQUEST;
+        return ResponseEntity.status(status).body(new ErrorResponseDto(exception.getMessage(), status));
+    }
+
+    @ExceptionHandler(ResetPasswordException.class)
+    public ResponseEntity<ErrorResponseDto> handleException(ResetPasswordException exception) {
+        log.warn("ResetPasswordException while resetting user password");
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        return ResponseEntity.status(status).body(new ErrorResponseDto(exception.getMessage(), status));
+    }
+
+    @ExceptionHandler(EmailSendingException.class)
+    public ResponseEntity<ErrorResponseDto> handleException(EmailSendingException exception) {
+        log.warn("EmailSendingException while sending email");
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        return ResponseEntity.status(status).body(new ErrorResponseDto(exception.getMessage(), status));
+    }
+
+    @ExceptionHandler(OtpNotFoundException.class)
+    public ResponseEntity<ErrorResponseDto> handleException(OtpNotFoundException exception) {
+        log.warn("OtpNotFoundException while retrieving otp");
+        HttpStatus status = HttpStatus.NOT_FOUND;
         return ResponseEntity.status(status).body(new ErrorResponseDto(exception.getMessage(), status));
     }
 
@@ -65,7 +89,7 @@ class ErrorHandler {
 
     @ExceptionHandler(RoleNotFoundException.class)
     public ResponseEntity<ErrorResponseDto> handleException(RoleNotFoundException exception) {
-        log.warn("RoleAlreadyAssignedToUserException while accessing role");
+        log.warn("RoleNotFoundException while accessing role");
         HttpStatus status = HttpStatus.NOT_FOUND;
         return ResponseEntity.status(status).body(new ErrorResponseDto(exception.getMessage(), status));
     }

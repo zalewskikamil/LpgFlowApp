@@ -1,6 +1,6 @@
 package com.github.lpgflow.domain.order;
 
-import com.github.lpgflow.domain.util.OrderStatus;
+import com.github.lpgflow.domain.util.enums.OrderStatus;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;

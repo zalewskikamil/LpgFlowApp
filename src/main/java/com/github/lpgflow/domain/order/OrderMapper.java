@@ -2,7 +2,7 @@ package com.github.lpgflow.domain.order;
 
 import com.github.lpgflow.domain.order.dto.request.CreateOrderRequestDto;
 import com.github.lpgflow.domain.order.dto.response.OrderDto;
-import com.github.lpgflow.domain.util.OrderStatus;
+import com.github.lpgflow.domain.util.enums.OrderStatus;
 
 import java.time.Instant;
 import java.time.format.DateTimeParseException;

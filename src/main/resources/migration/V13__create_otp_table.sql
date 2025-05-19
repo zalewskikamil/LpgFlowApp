@@ -1,0 +1,9 @@
+CREATE TABLE otp
+(
+    id         BIGSERIAL PRIMARY KEY,
+    user_email VARCHAR(254) NOT NULL UNIQUE,
+    otp        VARCHAR(6) NOT NULL,
+    issued_at  TIMESTAMP WITH TIME ZONE NOT NULL,
+    expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    used       BOOLEAN NOT NULL DEFAULT FALSE
+);

@@ -1,10 +1,10 @@
 package com.github.lpgflow.domain.warehouse;
 
 import com.github.lpgflow.domain.user.UserFacade;
-import com.github.lpgflow.domain.util.UserRole;
+import com.github.lpgflow.domain.util.enums.UserRole;
 import com.github.lpgflow.domain.user.dto.response.RoleDto;
 import com.github.lpgflow.domain.user.dto.response.UserWithDetailsDto;
-import com.github.lpgflow.domain.util.BdfSize;
+import com.github.lpgflow.domain.util.enums.BdfSize;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

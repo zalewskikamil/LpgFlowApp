@@ -1,7 +1,7 @@
 package com.github.lpgflow.domain.warehouse;
 
 
-import com.github.lpgflow.domain.util.BdfSize;
+import com.github.lpgflow.domain.util.enums.BdfSize;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;

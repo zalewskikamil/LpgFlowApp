@@ -1,4 +1,4 @@
-package com.github.lpgflow.infrastructure.config;
+package com.github.lpgflow.domain.util.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,6 +1,6 @@
 package com.github.lpgflow.domain.order;
 
-import com.github.lpgflow.domain.util.OrderStatus;
+import com.github.lpgflow.domain.util.enums.OrderStatus;
 import com.github.lpgflow.domain.warehouse.WarehouseFacade;
 import com.github.lpgflow.domain.warehouse.dto.response.GetWarehouseResponseDto;
 import com.github.lpgflow.domain.warehouse.dto.response.GetWarehousesByRegionalManagerEmailResponseDto;

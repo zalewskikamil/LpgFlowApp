@@ -1,6 +1,6 @@
 package com.github.lpgflow.domain.user;
 
-import com.github.lpgflow.domain.util.UserRole;
+import com.github.lpgflow.domain.util.enums.UserRole;
 
 import java.util.ArrayList;
 import java.util.HashMap;

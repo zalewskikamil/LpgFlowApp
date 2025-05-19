@@ -1,7 +1,7 @@
 package com.github.lpgflow.domain.order;
 
 import com.github.lpgflow.domain.bdf.BdfFacade;
-import com.github.lpgflow.domain.util.OrderStatus;
+import com.github.lpgflow.domain.util.enums.OrderStatus;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;

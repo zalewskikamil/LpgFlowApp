@@ -5,9 +5,9 @@ import com.github.lpgflow.domain.bdf.dto.response.CreateCylinderResponseDto;
 import com.github.lpgflow.domain.bdf.dto.response.CylinderDto;
 import com.github.lpgflow.domain.bdf.dto.response.GetAllCylindersResponseDto;
 import com.github.lpgflow.domain.bdf.dto.response.GetCylinderDto;
-import com.github.lpgflow.domain.util.CylinderCapacity;
-import com.github.lpgflow.domain.util.CylinderUsageType;
-import com.github.lpgflow.domain.util.GasType;
+import com.github.lpgflow.domain.util.enums.CylinderCapacity;
+import com.github.lpgflow.domain.util.enums.CylinderUsageType;
+import com.github.lpgflow.domain.util.enums.GasType;
 
 import java.util.List;
 import java.util.stream.Collectors;

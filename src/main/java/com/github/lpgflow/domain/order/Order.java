@@ -1,7 +1,7 @@
 package com.github.lpgflow.domain.order;
 
-import com.github.lpgflow.domain.util.BaseEntity;
-import com.github.lpgflow.domain.util.OrderStatus;
+import com.github.lpgflow.domain.util.entity.BaseEntity;
+import com.github.lpgflow.domain.util.enums.OrderStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -18,11 +18,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.management.monitor.StringMonitor;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 

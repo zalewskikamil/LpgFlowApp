@@ -1,7 +1,7 @@
 package com.github.lpgflow.domain.bdf;
 
-import com.github.lpgflow.domain.util.BaseEntity;
-import com.github.lpgflow.domain.util.BdfSize;
+import com.github.lpgflow.domain.util.entity.BaseEntity;
+import com.github.lpgflow.domain.util.enums.BdfSize;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

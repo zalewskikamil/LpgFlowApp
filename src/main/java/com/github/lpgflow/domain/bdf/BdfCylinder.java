@@ -1,7 +1,7 @@
 package com.github.lpgflow.domain.bdf;
 
 
-import com.github.lpgflow.domain.util.BaseEntity;
+import com.github.lpgflow.domain.util.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;

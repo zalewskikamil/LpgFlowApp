@@ -1,8 +1,7 @@
-package com.github.lpgflow.domain.util;
+package com.github.lpgflow.domain.util.enums;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.github.lpgflow.domain.order.OrderParameterException;
-import com.github.lpgflow.domain.warehouse.WarehouseParameterException;
 
 import java.util.HashMap;
 import java.util.Map;
