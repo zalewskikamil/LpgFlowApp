@@ -60,9 +60,9 @@ class SecurityConfig {
                 .requestMatchers(HttpMethod.PUT, "/warehouses/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PATCH, "/warehouses/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/cylinders/**").hasRole("ADMIN")
-                .requestMatchers("/bdfs").hasAnyRole(
+                .requestMatchers("/bdfs/**").hasAnyRole(
                         "PLANNER", "REGIONAL_MANAGER", "WAREHOUSEMAN", "PRODUCTION_MANAGER")
-                .requestMatchers("/orders").hasAnyRole(
+                .requestMatchers("/orders/**").hasAnyRole(
                         "PLANNER", "REGIONAL_MANAGER", "WAREHOUSEMAN", "PRODUCTION_MANAGER")
                 .anyRequest().authenticated());
         return http.build();

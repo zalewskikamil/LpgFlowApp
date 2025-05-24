@@ -42,8 +42,8 @@ class OrderRetriever {
     List<Order> getOrdersByRegionalManagerEmail(String regionalManagerEmail, Pageable pageable) {
         GetWarehousesByRegionalManagerEmailResponseDto facadeResponse =
                 warehouseFacade.getWarehousesByRegionalManagerEmail(regionalManagerEmail);
-        List<WarehouseDto> warehousesDto = facadeResponse.warehouses();
-        List<String> warehouseNames = warehousesDto.stream()
+        List<WarehouseDto> warehouseDtos = facadeResponse.warehouses();
+        List<String> warehouseNames = warehouseDtos.stream()
                 .map(WarehouseDto::name)
                 .collect(Collectors.toList());
         return orderRepository.getOrdersByWarehousesNames(warehouseNames, pageable);

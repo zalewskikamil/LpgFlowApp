@@ -36,6 +36,4 @@ public class OrderFacade {
     public void cancelOrderById(Long id) {
         orderCanceler.cancelOrderById(id);
     }
-
-
 }

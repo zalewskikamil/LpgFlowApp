@@ -16,10 +16,10 @@ interface OrderRepository extends Repository<Order, Long> {
 
     Optional<Order> findById(Long id);
 
-    @Query("SELECT o FROM Order o WHERE o.warehouseName = :warehuseName")
+    @Query("SELECT o FROM Order o WHERE o.warehouseName = :warehouseName")
     List<Order> findByWarehouseName(String warehouseName, Pageable pageable);
 
-    @Query("SELECT o FROM Order o WHERE o.warehouseName IN :warehusesNames")
+    @Query("SELECT o FROM Order o WHERE o.warehouseName IN :warehousesNames")
     List<Order> getOrdersByWarehousesNames(List<String> warehousesNames, Pageable pageable);
 
     List<Order> getOrdersByStatus(OrderStatus status, Pageable pageable);
