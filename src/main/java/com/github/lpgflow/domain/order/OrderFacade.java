@@ -2,6 +2,7 @@ package com.github.lpgflow.domain.order;
 
 
 import com.github.lpgflow.domain.order.dto.request.CreateOrderRequestDto;
+import com.github.lpgflow.domain.order.dto.request.GetOrdersRequestDto;
 import com.github.lpgflow.domain.order.dto.response.OrderDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -17,8 +18,10 @@ public class OrderFacade {
     private final OrderAdder orderAdder;
     private final OrderCanceler orderCanceler;
 
-    public List<OrderDto> getOrders(Pageable pageable) {
-        List<Order> orders = orderRetriever.getOrders(pageable);
+    public List<OrderDto> getOrders(GetOrdersRequestDto request, Pageable pageable) {
+        OrderQueryCriteria criteria = OrderMapper
+                .mapFromGetOrdersRequestDtoToOrderQueryCriteria(request, pageable);
+        List<Order> orders = orderRetriever.getOrders(criteria);
         return OrderMapper.mapFromListOrdersToListOrdersDto(orders);
     }
 

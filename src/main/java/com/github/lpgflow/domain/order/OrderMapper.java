@@ -1,12 +1,15 @@
 package com.github.lpgflow.domain.order;
 
 import com.github.lpgflow.domain.order.dto.request.CreateOrderRequestDto;
+import com.github.lpgflow.domain.order.dto.request.GetOrdersRequestDto;
 import com.github.lpgflow.domain.order.dto.response.OrderDto;
 import com.github.lpgflow.domain.util.enums.OrderStatus;
+import org.springframework.data.domain.Pageable;
 
 import java.time.Instant;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 class OrderMapper {
@@ -44,5 +47,23 @@ class OrderMapper {
         return orders.stream()
                 .map(OrderMapper::mapFromOrderToOrderDto)
                 .collect(Collectors.toList());
+    }
+
+    static OrderQueryCriteria mapFromGetOrdersRequestDtoToOrderQueryCriteria(GetOrdersRequestDto dto,
+                                                                             Pageable pageable) {
+        Optional<OrderStatus> orderStatus = Optional.ofNullable(dto.orderStatus()).map(OrderStatus::valueOf);
+        Optional<Instant> from = Optional.ofNullable(dto.from()).map(DateConverter::toInstant);
+        Optional<Instant> to = Optional.ofNullable(dto.to()).map(DateConverter::toInstant);
+        if (from.isPresent() && to.isPresent()) {
+            verifyDateRange(from.get(), to.get());
+        }
+        Optional<List<String>> warehouseNames = Optional.ofNullable(dto.warehouseNames());
+        return new OrderQueryCriteria(orderStatus, from, to, warehouseNames, pageable);
+    }
+
+    private static void verifyDateRange(Instant from, Instant to) {
+        if (from.isAfter(to)) {
+            throw new OrderParameterException("Invalid date range");
+        }
     }
 }

@@ -18,9 +18,14 @@ class OrderCanceler {
     private final OrderRetriever orderRetriever;
     private final OrderRepository orderRepository;
     private final BdfFacade bdfFacade;
+    private final OrderAccessValidator accessValidator;
 
     void cancelOrderById(Long orderId) {
         Order orderById = orderRetriever.findById(orderId);
+        String warehouseName = orderById.getWarehouseName();
+        if (!accessValidator.hasAccess(warehouseName)) {
+            throw new OrderAccessException("No access to order with id: " + orderId);
+        }
         OrderStatus status = orderById.getStatus();
         if (!status.canTransitionTo(OrderStatus.CANCELED)) {
             throw new OrderCancellationException("Order status not allowed to cancellation");

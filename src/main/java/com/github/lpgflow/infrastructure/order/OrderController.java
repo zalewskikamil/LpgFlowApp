@@ -2,6 +2,7 @@ package com.github.lpgflow.infrastructure.order;
 
 import com.github.lpgflow.domain.order.OrderFacade;
 import com.github.lpgflow.domain.order.dto.request.CreateOrderRequestDto;
+import com.github.lpgflow.domain.order.dto.request.GetOrdersRequestDto;
 import com.github.lpgflow.domain.order.dto.response.OrderDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,9 +27,10 @@ class OrderController {
 
     private final OrderFacade orderFacade;
 
-    @GetMapping
-    public ResponseEntity<List<OrderDto>> findAll(@PageableDefault(page = 0, size = 10) Pageable pageable) {
-        List<OrderDto> response = orderFacade.getOrders(pageable);
+    @PostMapping("/search")
+    public ResponseEntity<List<OrderDto>> findAll(@RequestBody @Valid GetOrdersRequestDto request,
+                                                  @PageableDefault(page = 0, size = 10) Pageable pageable) {
+        List<OrderDto> response = orderFacade.getOrders(request, pageable);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

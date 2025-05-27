@@ -11,23 +11,20 @@ import java.util.Optional;
 
 interface OrderRepository extends Repository<Order, Long> {
 
-
-    List<Order> findAll(Pageable pageable);
+    @Query("""
+            SELECT o FROM Order o
+            WHERE (:status IS NULL OR o.status = :status)
+            AND (CAST(:from AS TIMESTAMP) IS NULL OR o.scheduledCompletionDate >= :from)
+            AND (CAST(:to AS TIMESTAMP) IS NULL OR o.scheduledCompletionDate <= :to)
+            AND (:warehouses IS NULL OR o.warehouseName IN :warehouses)
+            """)
+    List<Order> getAllWithFilters(OrderStatus status,
+                                  Instant from,
+                                  Instant to,
+                                  List<String> warehouses,
+                                  Pageable pageable);
 
     Optional<Order> findById(Long id);
 
-    @Query("SELECT o FROM Order o WHERE o.warehouseName = :warehouseName")
-    List<Order> findByWarehouseName(String warehouseName, Pageable pageable);
-
-    @Query("SELECT o FROM Order o WHERE o.warehouseName IN :warehousesNames")
-    List<Order> getOrdersByWarehousesNames(List<String> warehousesNames, Pageable pageable);
-
-    List<Order> getOrdersByStatus(OrderStatus status, Pageable pageable);
-
-    List<Order> getOrdersByScheduledCompletionDate(Instant date, Pageable pageable);
-
-    List<Order> getOrdersByScheduledCompletionDateAndStatus(Instant date, OrderStatus status, Pageable pageable);
-
     Order save(Order order);
-
 }
