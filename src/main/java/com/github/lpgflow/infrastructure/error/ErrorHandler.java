@@ -1,6 +1,7 @@
 package com.github.lpgflow.infrastructure.error;
 
 import com.github.lpgflow.domain.bdf.BdfDeleteException;
+import com.github.lpgflow.domain.bdf.BdfNotFoundException;
 import com.github.lpgflow.domain.order.OrderAccessException;
 import com.github.lpgflow.domain.order.OrderCancellationException;
 import com.github.lpgflow.domain.order.OrderParameterException;
@@ -133,6 +134,13 @@ class ErrorHandler {
     public ResponseEntity<ErrorResponseDto> handleException(CylinderParameterException exception) {
         log.warn("CylinderParameterException while adding cylinder");
         HttpStatus status = HttpStatus.CONFLICT;
+        return ResponseEntity.status(status).body(new ErrorResponseDto(exception.getMessage(), status));
+    }
+
+    @ExceptionHandler(BdfNotFoundException.class)
+    public ResponseEntity<ErrorResponseDto> handleException(BdfNotFoundException exception) {
+        log.warn("BdfNotFoundException while retrieving BDF");
+        HttpStatus status = HttpStatus.NOT_FOUND;
         return ResponseEntity.status(status).body(new ErrorResponseDto(exception.getMessage(), status));
     }
 

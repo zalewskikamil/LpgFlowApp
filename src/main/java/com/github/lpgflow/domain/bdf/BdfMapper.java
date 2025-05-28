@@ -48,7 +48,7 @@ class BdfMapper {
     static Bdf mapFromCreateBdfRequestDtoToBdf(CreateBdfRequestDto request, String currentUserEmail) {
         BdfSize bdfSize;
         if (request.size() != null) {
-            bdfSize = BdfSize.valueOf(request.size());
+            bdfSize = BdfSize.fromString(request.size());
         } else {
             bdfSize = BdfSize.LARGE;
         }
