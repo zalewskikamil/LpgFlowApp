@@ -9,9 +9,11 @@ import com.github.lpgflow.infrastructure.security.AuthenticatedUserProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -23,6 +25,7 @@ class OrderParametersValidator {
     private final AuthenticatedUserProvider authenticatedUserProvider;
     private final BdfFacade bdfFacade;
     private final WarehouseFacade warehouseFacade;
+    private final Clock clock;
 
     void validateForCreation(Order order) {
         String warehouseName = order.getWarehouseName();
@@ -66,9 +69,8 @@ class OrderParametersValidator {
     }
 
     private void validateCompletionDate(Instant completionDate) {
-        ZoneId zone = ZoneId.of("Europe/Warsaw");
-        LocalDate targetDate = completionDate.atZone(zone).toLocalDate();
-        LocalDate dayAfterTomorrow = LocalDate.now(zone).plusDays(2);
+        LocalDate targetDate = completionDate.atZone(ZoneOffset.UTC).toLocalDate();
+        LocalDate dayAfterTomorrow = ZonedDateTime.now(clock).toLocalDate().plusDays(2);
         if (targetDate.isBefore(dayAfterTomorrow)) {
             throw new OrderParameterException("Completion date must be at least the day after tomorrow");
         }

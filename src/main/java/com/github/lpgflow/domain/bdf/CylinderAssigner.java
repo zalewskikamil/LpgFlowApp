@@ -46,7 +46,7 @@ class CylinderAssigner {
             throw new AssignCylindersToBdfParameterException("You are trying to assign too many cylinders. " +
                     "Please reduce the number of assigned cylinders or increase the number of default cylinders first");
         }
-        defaultBdfCylinder.setQuantity(defaultCylindersQuantity - cylindersQuantity);
+        defaultBdfCylinder.setQuantity(defaultCylindersQuantity - cylindersQuantity * slotsPerCylinder);
         bdf.addCylindersToBdf(defaultBdfCylinder);
         bdfCylinderRepository.save(defaultBdfCylinder);
         BdfCylinder bdfCylinderToSave = new BdfCylinder(bdf, cylinder, cylindersQuantity);
