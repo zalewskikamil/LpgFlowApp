@@ -563,7 +563,7 @@ class HappyPathIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isEmpty());
+                .andExpect(jsonPath("$.orders[*]").isEmpty());
 //  38. when planner post to /orders then order is returned with id 1
         mockMvc.perform(post("/orders")
                         .header("Authorization", "Bearer " +
@@ -578,12 +578,12 @@ class HappyPathIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id", is(1)))
-                .andExpect(jsonPath("$.bdfIds[*]", containsInAnyOrder(1, 2)))
-                .andExpect(jsonPath("$.createdBy", is("planner@test.pl")))
-                .andExpect(jsonPath("$.completionDate", is("06-06-2025")))
-                .andExpect(jsonPath("$.warehouseName", is("AA")))
-                .andExpect(jsonPath("$.status", is("NEW")));
+                .andExpect(jsonPath("$.order.id", is(1)))
+                .andExpect(jsonPath("$.order.bdfIds[*]", containsInAnyOrder(1, 2)))
+                .andExpect(jsonPath("$.order.createdBy", is("planner@test.pl")))
+                .andExpect(jsonPath("$.order.completionDate", is("06-06-2025")))
+                .andExpect(jsonPath("$.order.warehouseName", is("AA")))
+                .andExpect(jsonPath("$.order.status", is("NEW")));
 //  40. when regional manager1 post to /orders then order is returned with id 2
         mockMvc.perform(post("/orders")
                         .header("Authorization", "Bearer " +
@@ -598,12 +598,12 @@ class HappyPathIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id", is(2)))
-                .andExpect(jsonPath("$.bdfIds[*]", containsInAnyOrder(3)))
-                .andExpect(jsonPath("$.createdBy", is("manager1@test.pl")))
-                .andExpect(jsonPath("$.completionDate", is("08-06-2025")))
-                .andExpect(jsonPath("$.warehouseName", is("BB")))
-                .andExpect(jsonPath("$.status", is("NEW")));
+                .andExpect(jsonPath("$.order.id", is(2)))
+                .andExpect(jsonPath("$.order.bdfIds[*]", containsInAnyOrder(3)))
+                .andExpect(jsonPath("$.order.createdBy", is("manager1@test.pl")))
+                .andExpect(jsonPath("$.order.completionDate", is("08-06-2025")))
+                .andExpect(jsonPath("$.order.warehouseName", is("BB")))
+                .andExpect(jsonPath("$.order.status", is("NEW")));
 //  41. when warehouseman3 post to /orders then order is returned with id 3
         mockMvc.perform(post("/orders")
                         .header("Authorization", "Bearer " +
@@ -618,12 +618,12 @@ class HappyPathIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id", is(3)))
-                .andExpect(jsonPath("$.bdfIds[*]", containsInAnyOrder(4)))
-                .andExpect(jsonPath("$.createdBy", is("warehouseman3@test.pl")))
-                .andExpect(jsonPath("$.completionDate", is("10-06-2025")))
-                .andExpect(jsonPath("$.warehouseName", is("CC")))
-                .andExpect(jsonPath("$.status", is("NEW")));
+                .andExpect(jsonPath("$.order.id", is(3)))
+                .andExpect(jsonPath("$.order.bdfIds[*]", containsInAnyOrder(4)))
+                .andExpect(jsonPath("$.order.createdBy", is("warehouseman3@test.pl")))
+                .andExpect(jsonPath("$.order.completionDate", is("10-06-2025")))
+                .andExpect(jsonPath("$.order.warehouseName", is("CC")))
+                .andExpect(jsonPath("$.order.status", is("NEW")));
 //  42. when planner post to /orders/search then he can see three orders
         mockMvc.perform(post("/orders/search")
                         .header("Authorization", "Bearer " +
@@ -634,8 +634,8 @@ class HappyPathIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[*]", hasSize(3)))
-                .andExpect(jsonPath("$[*].id", containsInAnyOrder(1, 2, 3)));
+                .andExpect(jsonPath("$.orders[*]", hasSize(3)))
+                .andExpect(jsonPath("$.orders[*].id", containsInAnyOrder(1, 2, 3)));
 //  43. when regional manager1 post to /orders/search then he can see two orders
         mockMvc.perform(post("/orders/search")
                         .header("Authorization", "Bearer " +
@@ -646,8 +646,8 @@ class HappyPathIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[*]", hasSize(2)))
-                .andExpect(jsonPath("$[*].id", containsInAnyOrder(1, 2)));
+                .andExpect(jsonPath("$.orders[*]", hasSize(2)))
+                .andExpect(jsonPath("$.orders[*].id", containsInAnyOrder(1, 2)));
 //  44. when regional manager2 post to /orders/search then he can see one order
         mockMvc.perform(post("/orders/search")
                         .header("Authorization", "Bearer " +
@@ -658,8 +658,8 @@ class HappyPathIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[*]", hasSize(1)))
-                .andExpect(jsonPath("$[*].id", containsInAnyOrder(3)));
+                .andExpect(jsonPath("$.orders[*]", hasSize(1)))
+                .andExpect(jsonPath("$.orders[*].id", containsInAnyOrder(3)));
 //  45. when warehouseman1 post to /orders/search then he can see one order with id 1
         mockMvc.perform(post("/orders/search")
                         .header("Authorization", "Bearer " +
@@ -670,8 +670,8 @@ class HappyPathIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[*]", hasSize(1)))
-                .andExpect(jsonPath("$[*].id", containsInAnyOrder(1)));
+                .andExpect(jsonPath("$.orders[*]", hasSize(1)))
+                .andExpect(jsonPath("$.orders[*].id", containsInAnyOrder(1)));
 //  46. when warehouseman2 post to /orders/search then he can see one order with id 2
         mockMvc.perform(post("/orders/search")
                         .header("Authorization", "Bearer " +
@@ -682,8 +682,8 @@ class HappyPathIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[*]", hasSize(1)))
-                .andExpect(jsonPath("$[*].id", containsInAnyOrder(2)));
+                .andExpect(jsonPath("$.orders[*]", hasSize(1)))
+                .andExpect(jsonPath("$.orders[*].id", containsInAnyOrder(2)));
 //  47. when warehouseman3 post to /orders/search then he can see one order with id 3
         mockMvc.perform(post("/orders/search")
                         .header("Authorization", "Bearer " +
@@ -694,8 +694,8 @@ class HappyPathIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[*]", hasSize(1)))
-                .andExpect(jsonPath("$[*].id", containsInAnyOrder(3)));
+                .andExpect(jsonPath("$.orders[*]", hasSize(1)))
+                .andExpect(jsonPath("$.orders[*].id", containsInAnyOrder(3)));
     }
 
     private String generateToken(String userEmail, List<String> roles) {

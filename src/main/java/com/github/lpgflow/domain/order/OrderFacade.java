@@ -3,7 +3,9 @@ package com.github.lpgflow.domain.order;
 
 import com.github.lpgflow.domain.order.dto.request.CreateOrderRequestDto;
 import com.github.lpgflow.domain.order.dto.request.GetOrdersRequestDto;
-import com.github.lpgflow.domain.order.dto.response.OrderDto;
+import com.github.lpgflow.domain.order.dto.response.CreateOrderResponseDto;
+import com.github.lpgflow.domain.order.dto.response.GetAllOrdersResponse;
+import com.github.lpgflow.domain.order.dto.response.GetOrderResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,22 +20,22 @@ public class OrderFacade {
     private final OrderAdder orderAdder;
     private final OrderCanceler orderCanceler;
 
-    public List<OrderDto> getOrders(GetOrdersRequestDto request, Pageable pageable) {
+    public GetAllOrdersResponse getOrders(GetOrdersRequestDto request, Pageable pageable) {
         OrderQueryCriteria criteria = OrderMapper
                 .mapFromGetOrdersRequestDtoToOrderQueryCriteria(request, pageable);
         List<Order> orders = orderRetriever.getOrders(criteria);
-        return OrderMapper.mapFromListOrdersToListOrdersDto(orders);
+        return OrderMapper.mapFromListOrdersToGetAllOrdersResponse(orders);
     }
 
-    public OrderDto findById(Long id) {
+    public GetOrderResponseDto findById(Long id) {
         Order orderById = orderRetriever.findById(id);
-        return OrderMapper.mapFromOrderToOrderDto(orderById);
+        return OrderMapper.mapFromOrderToGetOrderResponseDto(orderById);
     }
 
-    public OrderDto addOrder(CreateOrderRequestDto request) {
+    public CreateOrderResponseDto addOrder(CreateOrderRequestDto request) {
         Order order = OrderMapper.mapFromCreateOrderRequestDtoToOrder(request);
         Order savedOrder = orderAdder.addOrder(order);
-        return OrderMapper.mapFromOrderToOrderDto(savedOrder);
+        return OrderMapper.mapFromOrderToCreateOrderResponseDto(savedOrder);
     }
 
     public void cancelOrderById(Long id) {
