@@ -2,6 +2,9 @@ package com.github.lpgflow.domain.order;
 
 import com.github.lpgflow.domain.order.dto.request.CreateOrderRequestDto;
 import com.github.lpgflow.domain.order.dto.request.GetOrdersRequestDto;
+import com.github.lpgflow.domain.order.dto.response.CreateOrderResponseDto;
+import com.github.lpgflow.domain.order.dto.response.GetAllOrdersResponse;
+import com.github.lpgflow.domain.order.dto.response.GetOrderResponseDto;
 import com.github.lpgflow.domain.order.dto.response.OrderDto;
 import com.github.lpgflow.domain.util.enums.OrderStatus;
 import org.springframework.data.domain.Pageable;
@@ -29,26 +32,6 @@ class OrderMapper {
                 .build();
     }
 
-    static OrderDto mapFromOrderToOrderDto(Order order) {
-        String completionDate = DateConverter.fromInstant(order.getScheduledCompletionDate());
-        List<Long> bdfIds = order.getBdfIds().stream().toList();
-        String status = order.getStatus().name();
-        return OrderDto.builder()
-                .id(order.getId())
-                .bdfIds(bdfIds)
-                .createdBy(order.getCreatedBy())
-                .completionDate(completionDate)
-                .warehouseName(order.getWarehouseName())
-                .status(status)
-                .build();
-    }
-
-    static List<OrderDto> mapFromListOrdersToListOrdersDto(List<Order> orders) {
-        return orders.stream()
-                .map(OrderMapper::mapFromOrderToOrderDto)
-                .collect(Collectors.toList());
-    }
-
     static OrderQueryCriteria mapFromGetOrdersRequestDtoToOrderQueryCriteria(GetOrdersRequestDto dto,
                                                                              Pageable pageable) {
         Optional<OrderStatus> orderStatus = Optional.ofNullable(dto.orderStatus()).map(OrderStatus::valueOf);
@@ -65,5 +48,39 @@ class OrderMapper {
         if (from.isAfter(to)) {
             throw new OrderParameterException("Invalid date range");
         }
+    }
+
+    static GetAllOrdersResponse mapFromListOrdersToGetAllOrdersResponse(List<Order> orders) {
+        return GetAllOrdersResponse.builder()
+                .orders(orders.stream()
+                        .map(OrderMapper::mapFromOrderToOrderDto)
+                        .collect(Collectors.toList()))
+                .build();
+    }
+
+    static OrderDto mapFromOrderToOrderDto(Order order) {
+        String completionDate = DateConverter.fromInstant(order.getScheduledCompletionDate());
+        List<Long> bdfIds = order.getBdfIds().stream().toList();
+        String status = order.getStatus().name();
+        return OrderDto.builder()
+                .id(order.getId())
+                .bdfIds(bdfIds)
+                .createdBy(order.getCreatedBy())
+                .completionDate(completionDate)
+                .warehouseName(order.getWarehouseName())
+                .status(status)
+                .build();
+    }
+
+    static GetOrderResponseDto mapFromOrderToGetOrderResponseDto(Order order) {
+        return GetOrderResponseDto.builder()
+                .order(mapFromOrderToOrderDto(order))
+                .build();
+    }
+
+    static CreateOrderResponseDto mapFromOrderToCreateOrderResponseDto(Order order) {
+        return CreateOrderResponseDto.builder()
+                .order(mapFromOrderToOrderDto(order))
+                .build();
     }
 }
