@@ -1,9 +1,11 @@
 package com.github.lpgflow.domain.order.dto.request;
 
 import jakarta.validation.constraints.Pattern;
+import lombok.Builder;
 
 import java.util.List;
 
+@Builder
 public record GetOrdersRequestDto(
 
         String orderStatus,
