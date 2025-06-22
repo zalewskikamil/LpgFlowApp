@@ -40,7 +40,9 @@ class OrderMapper {
         if (from.isPresent() && to.isPresent()) {
             verifyDateRange(from.get(), to.get());
         }
-        Optional<List<String>> warehouseNames = Optional.ofNullable(dto.warehouseNames());
+        Optional<List<String>> warehouseNames =
+                Optional.ofNullable(dto.warehouseNames())
+                        .filter(list -> !list.isEmpty());
         return new OrderQueryCriteria(orderStatus, from, to, warehouseNames, pageable);
     }
 
