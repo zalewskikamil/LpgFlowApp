@@ -2,6 +2,7 @@ package com.github.lpgflow.infrastructure.error;
 
 import com.github.lpgflow.domain.bdf.BdfDeleteException;
 import com.github.lpgflow.domain.bdf.BdfNotFoundException;
+import com.github.lpgflow.domain.bdf.NoAvailableSpaceForCylinderIncreaseException;
 import com.github.lpgflow.domain.order.OrderAccessException;
 import com.github.lpgflow.domain.order.OrderCancellationException;
 import com.github.lpgflow.domain.order.OrderParameterException;
@@ -157,6 +158,14 @@ class ErrorHandler {
         HttpStatus status = HttpStatus.NOT_FOUND;
         return ResponseEntity.status(status).body(new ErrorResponseDto(exception.getMessage(), status));
     }
+
+    @ExceptionHandler(NoAvailableSpaceForCylinderIncreaseException.class)
+    public ResponseEntity<ErrorResponseDto> handleException(NoAvailableSpaceForCylinderIncreaseException exception) {
+        log.warn("NoAvailableSpaceForCylinderIncreaseException while increasing the number of cylinders");
+        HttpStatus status = HttpStatus.CONFLICT;
+        return ResponseEntity.status(status).body(new ErrorResponseDto(exception.getMessage(), status));
+    }
+
     @ExceptionHandler(BdfDeleteException.class)
     public ResponseEntity<ErrorResponseDto> handleException(BdfDeleteException exception) {
         log.warn("BdfDeleteException while deleting BDF");

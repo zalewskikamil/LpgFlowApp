@@ -40,7 +40,9 @@ class BdfUpdater {
         int cylinderToUpdateSlots = cylinderToUpdateQuantity * cylinder.getBdfSlots();
         int requiredSlots = newQuantity * cylinder.getBdfSlots();
         if (requiredSlots > defaultCylinderSlots + cylinderToUpdateSlots) {
-            throw new RuntimeException("Cylinder parameters invalid");
+            throw new NoAvailableSpaceForCylinderIncreaseException(
+                    "Insufficient space for the requested number of cylinders. " +
+                    "Reduce the requested number or reduce the number of other types of cylinders.");
         }
         bdfCylinderToUpdate.setQuantity(newQuantity);
         BdfCylinder savedBdfCylinder = bdfCylinderRepository.save(bdfCylinderToUpdate);
