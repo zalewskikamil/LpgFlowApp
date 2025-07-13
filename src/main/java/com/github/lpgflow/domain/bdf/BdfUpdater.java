@@ -2,6 +2,7 @@ package com.github.lpgflow.domain.bdf;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,12 +20,13 @@ class BdfUpdater {
     private final BdfCylinderRetriever bdfCylinderRetriever;
     private final CylinderRetriever cylinderRetriever;
 
+    @Value("${cylinder.default.id}")
+    private Long defaultCylinderId;
 
     void updateBdfPartiallyById(Long bdfId, Long cylinderId, int newQuantity) {
         Bdf bdfFromDatabase = bdfRetriever.findById(bdfId);
         Cylinder cylinder = cylinderRetriever.findById(cylinderId);
         BdfCylinder bdfCylinderToUpdate = bdfCylinderRetriever.findByIdBdfIdAndCylinderId(bdfId, cylinderId);
-        long defaultCylinderId = 1L;
         Cylinder defaultCylinder = cylinderRetriever.findById(defaultCylinderId);
         BdfCylinder defaultBdfCylinder = bdfCylinderRetriever.findByIdBdfIdAndCylinderId(bdfId, defaultCylinderId);
         Set<BdfCylinder> bdfCylindersFromDatabase = bdfFromDatabase.getCylinders();
@@ -38,7 +40,9 @@ class BdfUpdater {
         int cylinderToUpdateSlots = cylinderToUpdateQuantity * cylinder.getBdfSlots();
         int requiredSlots = newQuantity * cylinder.getBdfSlots();
         if (requiredSlots > defaultCylinderSlots + cylinderToUpdateSlots) {
-            throw new RuntimeException("Cylinder parameters invalid");
+            throw new NoAvailableSpaceForCylinderIncreaseException(
+                    "Insufficient space for the requested number of cylinders. " +
+                    "Reduce the requested number or reduce the number of other types of cylinders.");
         }
         bdfCylinderToUpdate.setQuantity(newQuantity);
         BdfCylinder savedBdfCylinder = bdfCylinderRepository.save(bdfCylinderToUpdate);
